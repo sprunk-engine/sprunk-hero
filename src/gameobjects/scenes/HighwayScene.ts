@@ -12,6 +12,7 @@ import {GridGameObject} from "../GridGameObject.ts";
 import {RoadGameObject} from "../RoadGameObject.ts";
 import {GizmoGameObject} from "../GizmoGameObject.ts";
 import {FretLaneGameObject} from "../FretLaneGameObject.ts";
+import {GameLogicGameObject} from "../GameLogicGameObject.ts";
 
 export class HighwayScene extends GameObject{
     constructor(gameEngineWindow: GameEngineWindow, debug: boolean) {
@@ -36,12 +37,8 @@ export class HighwayScene extends GameObject{
         background.addBehavior(new SpriteRenderBehavior(renderComponent, "/assets/background.jpg"))
         cameraGo.addChild(background);
 
-
-        const road = new RoadGameObject(renderComponent);
-        this.addChild(road);
-
-        const fretsLane = new FretLaneGameObject(renderComponent, inputComponent);
-        this.addChild(fretsLane);
+        const gameLogic = new GameLogicGameObject(renderComponent, inputComponent);
+        this.addChild(gameLogic);
 
         if(debug) {
             const grid = new GridGameObject(renderComponent);

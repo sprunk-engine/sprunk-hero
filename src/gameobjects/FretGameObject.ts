@@ -13,6 +13,8 @@ import {FretInputBehavior} from "../behaviors/notes/FretInputBehavior.ts";
 import {BooleanScaleOutputBehavior} from "../behaviors/transform/BooleanScaleOutputBehavior.ts";
 
 export class FretGameObject extends GameObject{
+    public readonly fretLogicBehavior: FretLogicBehavior;
+
     constructor(renderEngine: RenderGameEngineComponent, input : InputGameEngineComponent, fret: Fret) {
         super("Fret " + fret.toString());
 
@@ -34,9 +36,9 @@ export class FretGameObject extends GameObject{
             )
         });
 
-        const fretLogic = new FretLogicBehavior(fret);
-        this.addBehavior(fretLogic);
+        this.fretLogicBehavior = new FretLogicBehavior(fret);
+        this.addBehavior(this.fretLogicBehavior);
         this.addBehavior(new BooleanScaleOutputBehavior(0.35, 0.55, 0.03));
-        this.addBehavior(new FretInputBehavior(input, fretLogic));
+        this.addBehavior(new FretInputBehavior(input, this.fretLogicBehavior));
     }
 }
