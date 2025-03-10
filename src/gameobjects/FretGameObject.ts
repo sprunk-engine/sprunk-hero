@@ -18,6 +18,8 @@ export class FretGameObject extends GameObject{
     constructor(renderEngine: RenderGameEngineComponent, input : InputGameEngineComponent, fret: Fret) {
         super("Fret " + fret.toString());
 
+        this.transform.position.x = fret.position;
+
         ObjLoader.load("/assets/note/fret.obj").then((obj) => {
             this.addBehavior(
                 new MeshRenderBehavior(
