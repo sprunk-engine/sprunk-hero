@@ -1,7 +1,9 @@
 import {GameObject, MeshRenderBehavior, ObjLoader, RenderGameEngineComponent} from "sprunk-engine";
 import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
-import {RepeatableForwardLogicBehavior} from "../behaviors/RepeatableForwardLogicBehavior.ts";
+import {
+    RepeatableForwardOutputBehavior
+} from "../behaviors/RepeatableForwardLogicBehavior.ts";
 
 export class RoadGameObject extends GameObject{
     /**
@@ -27,6 +29,6 @@ export class RoadGameObject extends GameObject{
             )
         });
 
-        this.addBehavior(new RepeatableForwardLogicBehavior(10, -35, -26.2));
+        this.addBehavior(new RepeatableForwardOutputBehavior(10, -35, -26.2));
     }
 }

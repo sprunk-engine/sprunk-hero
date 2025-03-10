@@ -1,9 +1,9 @@
-import {LogicBehavior} from "sprunk-engine";
+import {OutputBehavior} from "sprunk-engine";
 
 /**
  * A simple logic behavior that
  */
-export class ForwardLogicBehavior extends LogicBehavior<number>{
+export class ForwardOutputBehavior extends OutputBehavior{
     protected speed : number;
     protected time : number = 0;
     protected offset : number;
@@ -17,6 +17,6 @@ export class ForwardLogicBehavior extends LogicBehavior<number>{
     tick(_deltaTime: number) {
         super.tick(_deltaTime);
         this.time = this.time + _deltaTime;
-        this.gameObject.transform.position.z = this.time * this.speed + this.offset;
+        this.transform.position.z = this.time * this.speed + this.offset;
     }
 }

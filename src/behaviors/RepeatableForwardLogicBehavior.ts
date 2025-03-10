@@ -1,6 +1,6 @@
-import {ForwardLogicBehavior} from "./ForwardLogicBehavior.ts";
+import {ForwardOutputBehavior} from "./ForwardOutputBehavior.ts";
 
-export class RepeatableForwardLogicBehavior extends ForwardLogicBehavior{
+export class RepeatableForwardOutputBehavior extends ForwardOutputBehavior{
     private _repeatCoordinate : number;
 
     constructor(speed : number, offset : number, repeatCoordinate : number) {
@@ -10,7 +10,7 @@ export class RepeatableForwardLogicBehavior extends ForwardLogicBehavior{
 
     tick(_deltaTime: number) {
         super.tick(_deltaTime);
-        if(this.gameObject.transform.position.z > this._repeatCoordinate){
+        if(this.transform.position.z > this._repeatCoordinate){
             this.time = 0;
         }
     }
