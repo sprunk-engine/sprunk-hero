@@ -40,7 +40,7 @@ export class HighwayScene extends GameObject{
         const road = new RoadGameObject(renderComponent);
         this.addChild(road);
 
-        const fretsLane = new FretLaneGameObject(renderComponent);
+        const fretsLane = new FretLaneGameObject(renderComponent, inputComponent);
         this.addChild(fretsLane);
 
         if(debug) {

@@ -37,6 +37,10 @@ export class Fret{
         return this._index - 2;
     }
 
+    get keyboardKey() : string {
+        return this._index+1+"";
+    }
+
     static fromIndex(index : number) : Fret {
         return new Fret(index);
     }
