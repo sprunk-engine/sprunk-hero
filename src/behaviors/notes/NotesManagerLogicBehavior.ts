@@ -1,4 +1,4 @@
-import {GameObject, LogicBehavior, RenderGameEngineComponent} from "sprunk-engine";
+import {GameObject, LogicBehavior, MeshData, ObjLoader, RenderGameEngineComponent} from "sprunk-engine";
 import {Chart} from "../../models/Chart.ts";
 import {Mode} from "../../models/Mode.ts";
 import {FretLogicBehavior} from "./FretLogicBehavior.ts";
@@ -35,8 +35,10 @@ export class NotesManagerLogicBehavior extends LogicBehavior<void>{
         this._generateNotes(modeToPlay);
     }
 
-    private _generateNotes(mode: Mode) {
+    private async _generateNotes(mode: Mode)  {
+        const maxSupportedIndex = Fret.all().length - 1;
         mode.notes.forEach((note) => {
+            if(note.fret > maxSupportedIndex) return;
             const noteGameObject = new NoteGameObject(this._renderEngine, Fret.fromIndex(note.fret));
             noteGameObject.transform.position.z = -note.time * this._speed;
             this._container!.addChild(noteGameObject);
