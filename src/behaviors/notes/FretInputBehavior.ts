@@ -1,5 +1,4 @@
 import {DeviceInputBehavior, InputGameEngineComponent} from "sprunk-engine";
-import {Fret} from "../../models/NoteTextureColor.ts";
 import {FretLogicBehavior} from "./FretLogicBehavior.ts";
 
 export class FretInputBehavior extends DeviceInputBehavior{
