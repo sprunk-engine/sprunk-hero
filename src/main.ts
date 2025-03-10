@@ -58,6 +58,12 @@ ObjLoader.load("/assets/road/road-sprunk-hero.obj").then((obj) => {
             "/assets/road/GH3_PC-Axel-Unwrapped.png",
             BasicVertexMVPWithUV,
             BasicTextureSample,
+            {
+                addressModeU: "repeat",
+                addressModeV: "repeat",
+                magFilter: "linear",
+                minFilter: "linear",
+            }
         ),
     )
 });
