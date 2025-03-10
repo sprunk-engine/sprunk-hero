@@ -1,7 +1,6 @@
-import {GameObject, OutputBehavior} from "sprunk-engine";
-import {FretLogicBehavior} from "./FretLogicBehavior.ts";
+import {GameObject, LogicBehavior, OutputBehavior} from "sprunk-engine";
 
-export class FretOutputbehavior extends OutputBehavior{
+export class BooleanScaleOutputBehavior extends OutputBehavior{
     private _isPressed : boolean = false;
     private _currentScale : number;
     private readonly _scaleNormal : number
@@ -18,7 +17,7 @@ export class FretOutputbehavior extends OutputBehavior{
 
     setup(attachedOn: GameObject) {
         super.setup(attachedOn);
-        this.observe(FretLogicBehavior, (data : boolean) => {
+        this.observe(LogicBehavior<boolean>, (data : boolean) => {
             this._isPressed = data;
         });
     }

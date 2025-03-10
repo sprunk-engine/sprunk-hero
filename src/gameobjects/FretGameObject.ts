@@ -9,8 +9,8 @@ import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
 import {Fret} from "../models/NoteTextureColor.ts";
 import {FretLogicBehavior} from "../behaviors/notes/FretLogicBehavior.ts";
-import {FretOutputbehavior} from "../behaviors/notes/FretOutputbehavior.ts";
 import {FretInputBehavior} from "../behaviors/notes/FretInputBehavior.ts";
+import {BooleanScaleOutputBehavior} from "../behaviors/transform/BooleanScaleOutputBehavior.ts";
 
 export class FretGameObject extends GameObject{
     constructor(renderEngine: RenderGameEngineComponent, input : InputGameEngineComponent, fret: Fret) {
@@ -36,7 +36,7 @@ export class FretGameObject extends GameObject{
 
         const fretLogic = new FretLogicBehavior(fret);
         this.addBehavior(fretLogic);
-        this.addBehavior(new FretOutputbehavior(0.35, 0.55, 0.03));
+        this.addBehavior(new BooleanScaleOutputBehavior(0.35, 0.55, 0.03));
         this.addBehavior(new FretInputBehavior(input, fretLogic));
     }
 }
