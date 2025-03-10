@@ -4,7 +4,7 @@ import {
     GameObject, InputGameEngineComponent, MeshRenderBehavior, ObjLoader,
     RenderGameEngineComponent,
     SpriteRenderBehavior,
-    Sprunk
+    Sprunk, Vector3
 } from "sprunk-engine";
 
 import {FreeLookCameraController} from "./debug/FreeLookCameraController.ts";
@@ -25,18 +25,12 @@ const renderComponent: RenderGameEngineComponent =
 const inputComponent: InputGameEngineComponent =
     gameEngineWindow.getEngineComponent(InputGameEngineComponent)!;
 
-const go = new GameObject("Sprite");
-gameEngineWindow.root.addChild(go);
-
-go.addBehavior(
-    new SpriteRenderBehavior(renderComponent, "/sprunk.png"),
-);
-
 const cameraGo = new GameObject("Camera");
 cameraGo.addBehavior(new FreeLookCameraController());
-cameraGo.addBehavior(new FreeLookCameraKeyboardMouseInput(inputComponent));
-cameraGo.addBehavior(new Camera(renderComponent, Math.PI / 2));
-cameraGo.transform.position.z = 10;
+//cameraGo.addBehavior(new FreeLookCameraKeyboardMouseInput(inputComponent));
+cameraGo.addBehavior(new Camera(renderComponent, Math.PI / 3, undefined, undefined, 100));
+cameraGo.transform.position.set(0, 2.5, 3);
+cameraGo.transform.rotation.rotateAroundAxis(Vector3.right(),-Math.PI / 8)
 gameEngineWindow.root.addChild(cameraGo);
 
 const grid = new GameObject("Grid");
@@ -49,6 +43,7 @@ gameEngineWindow.root.addChild(grid);
 
 const road = new GameObject("Road");
 gameEngineWindow.root.addChild(road);
+road.transform.position.set(0, 0, -35)
 
 ObjLoader.load("/assets/road/road-sprunk-hero.obj").then((obj) => {
     road.addBehavior(
@@ -64,6 +59,21 @@ ObjLoader.load("/assets/road/road-sprunk-hero.obj").then((obj) => {
                 magFilter: "linear",
                 minFilter: "linear",
             }
+        ),
+    )
+});
+
+const gizmo = new GameObject("Gizmo");
+gameEngineWindow.root.addChild(gizmo);
+
+ObjLoader.load("/assets/gizmo/gizmo.obj").then((obj) => {
+    gizmo.addBehavior(
+        new MeshRenderBehavior(
+            renderComponent,
+            obj,
+            "/assets/gizmo/gizmo.png",
+            BasicVertexMVPWithUV,
+            BasicTextureSample,
         ),
     )
 });
