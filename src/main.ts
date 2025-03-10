@@ -1,9 +1,12 @@
 import {
-    Camera, Color,
+    Camera,
     GameEngineWindow,
-    GameObject, InputGameEngineComponent,
-    RenderGameEngineComponent, SpriteRenderBehavior,
-    Sprunk, Vector3
+    GameObject,
+    InputGameEngineComponent,
+    RenderGameEngineComponent,
+    SpriteRenderBehavior,
+    Sprunk,
+    Vector3
 } from "sprunk-engine";
 
 import {FreeLookCameraController} from "./debug/FreeLookCameraController.ts";
@@ -11,6 +14,9 @@ import {FreeLookCameraKeyboardMouseInput} from "./debug/FreeLookCameraKeyboardMo
 import {RoadGameObject} from "./gameobjects/RoadGameObject.ts";
 import {GizmoGameObject} from "./gameobjects/GizmoGameObject.ts";
 import {GridGameObject} from "./gameobjects/GridGameObject.ts";
+import {FretGameObject} from "./gameobjects/FretGameObject.ts";
+import {NoteTextureColor} from "./models/NoteTextureColor.ts";
+import {FretLaneGameObject} from "./gameobjects/FretLaneGameObject.ts";
 
 const canvas: HTMLCanvasElement =
     document.querySelector<HTMLCanvasElement>("#app")!;
@@ -48,4 +54,7 @@ gameEngineWindow.root.addChild(road);
 
 const gizmo = new GizmoGameObject(renderComponent);
 gameEngineWindow.root.addChild(gizmo);
+gizmo.transform.position.set(5, 0, 0);
 
+const fretsLane = new FretLaneGameObject(renderComponent);
+gameEngineWindow.root.addChild(fretsLane);
