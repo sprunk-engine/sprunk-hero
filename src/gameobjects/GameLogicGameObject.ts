@@ -20,6 +20,6 @@ export class GameLogicGameObject extends GameObject{
         const noteManagter = new NotesManagerLogicBehavior(renderEngine, fretsLane.fretLogicBehaviors);
         this.addBehavior(noteManagter);
 
-        noteManagter.setChart(exampleChart, exampleChart.modes[2]);
+        noteManagter.setChart(exampleChart, exampleChart.modes[0]);
     }
 }
