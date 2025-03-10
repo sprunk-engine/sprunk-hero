@@ -1,14 +1,17 @@
 import {
     Camera, Color,
     GameEngineWindow,
-    GameObject, InputGameEngineComponent,
+    GameObject, InputGameEngineComponent, MeshRenderBehavior, ObjLoader,
     RenderGameEngineComponent,
     SpriteRenderBehavior,
     Sprunk
 } from "sprunk-engine";
+
 import {FreeLookCameraController} from "./debug/FreeLookCameraController.ts";
 import {FreeLookCameraKeyboardMouseInput} from "./debug/FreeLookCameraKeyboardMouseInput.ts";
 import {GridRenderBehavior} from "./debug/GridRenderBehavior.ts";
+import BasicVertexMVPWithUV from "./shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
+import BasicTextureSample from "./shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
 
 const canvas: HTMLCanvasElement =
     document.querySelector<HTMLCanvasElement>("#app")!;
@@ -43,3 +46,18 @@ grid.addBehavior(
 grid.transform.rotation.setFromEulerAngles(Math.PI / 2, 0, 0);
 
 gameEngineWindow.root.addChild(grid);
+
+const road = new GameObject("Road");
+gameEngineWindow.root.addChild(road);
+
+ObjLoader.load("/assets/road/road-sprunk-hero.obj").then((obj) => {
+    road.addBehavior(
+        new MeshRenderBehavior(
+            renderComponent,
+            obj,
+            "/assets/road/GH3_PC-Axel-Unwrapped.png",
+            BasicVertexMVPWithUV,
+            BasicTextureSample,
+        ),
+    )
+});
