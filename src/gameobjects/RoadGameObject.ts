@@ -3,7 +3,7 @@ import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
 import {
     RepeatableForwardOutputBehavior
-} from "../behaviors/RepeatableForwardLogicBehavior.ts";
+} from "../behaviors/RepeatableForwardOutputBehavior.ts";
 
 export class RoadGameObject extends GameObject{
     /**
