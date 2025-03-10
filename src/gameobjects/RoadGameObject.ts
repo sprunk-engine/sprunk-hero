@@ -2,6 +2,7 @@ import {GameObject, MeshRenderBehavior, ObjLoader, RenderGameEngineComponent} fr
 import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
 import {ForwardLogicBehavior} from "../behaviors/ForwardLogicBehavior.ts";
+import {RepeatableForwardLogicBehavior} from "../behaviors/RepeatableForwardLogicBehavior.ts";
 
 export class RoadGameObject extends GameObject{
     /**
@@ -27,6 +28,6 @@ export class RoadGameObject extends GameObject{
             )
         });
 
-        this.addBehavior(new ForwardLogicBehavior(10, -35));
+        this.addBehavior(new RepeatableForwardLogicBehavior(10, -35, -26.2));
     }
 }
