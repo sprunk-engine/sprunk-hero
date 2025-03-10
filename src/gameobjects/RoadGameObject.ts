@@ -1,6 +1,7 @@
 import {GameObject, MeshRenderBehavior, ObjLoader, RenderGameEngineComponent} from "sprunk-engine";
 import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
+import {ForwardLogicBehavior} from "../behaviors/ForwardLogicBehavior.ts";
 
 export class RoadGameObject extends GameObject{
     /**
@@ -8,8 +9,6 @@ export class RoadGameObject extends GameObject{
      */
     constructor(renderEngine: RenderGameEngineComponent) {
         super("Road");
-        this.transform.position.set(0, 0, -35)
-
         ObjLoader.load("/assets/road/road-sprunk-hero.obj").then((obj) => {
             this.addBehavior(
                 new MeshRenderBehavior(
@@ -27,5 +26,7 @@ export class RoadGameObject extends GameObject{
                 ),
             )
         });
+
+        this.addBehavior(new ForwardLogicBehavior(10, -35));
     }
 }

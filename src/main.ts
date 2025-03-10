@@ -8,7 +8,6 @@ import {
 
 import {FreeLookCameraController} from "./debug/FreeLookCameraController.ts";
 import {FreeLookCameraKeyboardMouseInput} from "./debug/FreeLookCameraKeyboardMouseInput.ts";
-import {GridRenderBehavior} from "./debug/GridRenderBehavior.ts";
 import {RoadGameObject} from "./gameobjects/RoadGameObject.ts";
 import {GizmoGameObject} from "./gameobjects/GizmoGameObject.ts";
 import {GridGameObject} from "./gameobjects/GridGameObject.ts";
@@ -27,7 +26,7 @@ const inputComponent: InputGameEngineComponent =
 
 const cameraGo = new GameObject("Camera");
 cameraGo.addBehavior(new FreeLookCameraController());
-//cameraGo.addBehavior(new FreeLookCameraKeyboardMouseInput(inputComponent));
+cameraGo.addBehavior(new FreeLookCameraKeyboardMouseInput(inputComponent));
 cameraGo.addBehavior(new Camera(renderComponent, Math.PI / 3, undefined, undefined, 100));
 cameraGo.transform.position.set(0, 2.5, 3);
 cameraGo.transform.rotation.rotateAroundAxis(Vector3.right(),-Math.PI / 8)
