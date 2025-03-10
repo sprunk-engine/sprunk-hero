@@ -19,6 +19,11 @@ export class NotesManagerLogicBehavior extends LogicBehavior<void>{
         this._renderEngine = renderEngine;
     }
 
+    protected onEnable() {
+        super.onEnable();
+        this.gameObject.getFirstBehavior(LogicBehavior<number>)!.onDataChanged.addObserver(this.updateTime.bind(this));
+    }
+
     public setChart(chart: Chart, modeToPlay : Mode) {
         this._chart = chart;
         this._modeToPlay = modeToPlay;

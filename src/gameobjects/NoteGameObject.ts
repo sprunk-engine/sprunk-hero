@@ -8,6 +8,7 @@ export class NoteGameObject extends GameObject{
         super("Note " + fret.toString());
 
         this.transform.scale.set(0.45, 0.45, 0.45);
+        this.transform.position.x = fret.position;
 
         ObjLoader.load("/assets/note/note.obj").then((obj) => {
             this.addBehavior(

@@ -9,9 +9,7 @@ import {
 import {FreeLookCameraController} from "../../debug/FreeLookCameraController.ts";
 import {FreeLookCameraKeyboardMouseInput} from "../../debug/FreeLookCameraKeyboardMouseInput.ts";
 import {GridGameObject} from "../GridGameObject.ts";
-import {RoadGameObject} from "../RoadGameObject.ts";
 import {GizmoGameObject} from "../GizmoGameObject.ts";
-import {FretLaneGameObject} from "../FretLaneGameObject.ts";
 import {GameLogicGameObject} from "../GameLogicGameObject.ts";
 
 export class HighwayScene extends GameObject{
