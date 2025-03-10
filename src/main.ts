@@ -2,7 +2,7 @@ import {
     Camera, Color,
     GameEngineWindow,
     GameObject, InputGameEngineComponent,
-    RenderGameEngineComponent,
+    RenderGameEngineComponent, SpriteRenderBehavior,
     Sprunk, Vector3
 } from "sprunk-engine";
 
@@ -27,10 +27,18 @@ const inputComponent: InputGameEngineComponent =
 const cameraGo = new GameObject("Camera");
 cameraGo.addBehavior(new FreeLookCameraController());
 cameraGo.addBehavior(new FreeLookCameraKeyboardMouseInput(inputComponent));
-cameraGo.addBehavior(new Camera(renderComponent, Math.PI / 3, undefined, undefined, 100));
+cameraGo.addBehavior(new Camera(renderComponent, Math.PI / 3, undefined, undefined, 30));
 cameraGo.transform.position.set(0, 2.5, 3);
 cameraGo.transform.rotation.rotateAroundAxis(Vector3.right(),-Math.PI / 8)
 gameEngineWindow.root.addChild(cameraGo);
+
+const background = new GameObject("Background");
+background.transform.position.set(0, 0, -29.99);
+const size = 40;
+background.transform.scale.x = size*16/9;
+background.transform.scale.y = size;
+background.addBehavior(new SpriteRenderBehavior(renderComponent, "/assets/background.jpg"))
+cameraGo.addChild(background);
 
 const grid = new GridGameObject(renderComponent);
 gameEngineWindow.root.addChild(grid);
