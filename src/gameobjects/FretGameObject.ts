@@ -1,11 +1,11 @@
 import {GameObject, MeshRenderBehavior, ObjLoader, RenderGameEngineComponent} from "sprunk-engine";
 import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
-import {NoteTextureColor} from "../models/NoteTextureColor.ts";
+import {Fret} from "../models/NoteTextureColor.ts";
 
 export class FretGameObject extends GameObject{
-    constructor(renderEngine: RenderGameEngineComponent, color: NoteTextureColor) {
-        super("Fret" + color);
+    constructor(renderEngine: RenderGameEngineComponent, fret: Fret) {
+        super("Fret " + fret.toString());
 
         this.transform.scale.set(0.45, 0.45, 0.45);
 
@@ -14,7 +14,7 @@ export class FretGameObject extends GameObject{
                 new MeshRenderBehavior(
                     renderEngine,
                     obj,
-                    "/assets/note/"+color,
+                    fret.texturePath,
                     BasicVertexMVPWithUV,
                     BasicTextureSample,
                     {
