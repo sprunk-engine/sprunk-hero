@@ -2,7 +2,7 @@ import {LogicBehavior} from "sprunk-engine";
 import {Fret} from "../../models/NoteTextureColor.ts";
 //import {BooleanStateObservable} from "../../models/BooleanState.ts";
 
-export class FretLogicBehavior extends LogicBehavior<boolean>/* implements BooleanStateObservable*/{
+export class FretLogicBehavior extends LogicBehavior<boolean>{
     private readonly _fret : Fret;
 
     public get fret() : Fret {
