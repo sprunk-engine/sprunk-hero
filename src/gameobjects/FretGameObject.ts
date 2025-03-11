@@ -12,6 +12,9 @@ import {FretLogicBehavior} from "../behaviors/notes/FretLogicBehavior.ts";
 import {FretInputBehavior} from "../behaviors/notes/FretInputBehavior.ts";
 import {BooleanScaleOutputBehavior} from "../behaviors/transform/BooleanScaleOutputBehavior.ts";
 
+/**
+ * A GameObject that represents a fret.
+ */
 export class FretGameObject extends GameObject{
     public readonly fretLogicBehavior: FretLogicBehavior;
 

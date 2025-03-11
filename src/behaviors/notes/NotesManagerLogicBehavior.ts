@@ -5,6 +5,9 @@ import {FretLogicBehavior} from "./FretLogicBehavior.ts";
 import {Fret} from "../../models/NoteTextureColor.ts";
 import {NoteGameObject} from "../../gameobjects/NoteGameObject.ts";
 
+/**
+ * The main logic behavior that controls the note flow.
+ */
 export class NotesManagerLogicBehavior extends LogicBehavior<void>{
     private _chart : Chart | null = null;
     private _modeToPlay : Mode | null = null;

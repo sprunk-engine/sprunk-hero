@@ -1,5 +1,8 @@
 import {ForwardOutputBehavior} from "./ForwardOutputBehavior.ts";
 
+/**
+ * A simple logic behavior that move in Z direction the gameobject attached to
+ */
 export class RepeatableForwardOutputBehavior extends ForwardOutputBehavior{
     private _repeatCoordinate : number;
 

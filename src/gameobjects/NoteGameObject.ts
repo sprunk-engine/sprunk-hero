@@ -3,6 +3,9 @@ import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
 import {Fret} from "../models/NoteTextureColor.ts";
 
+/**
+ * A GameObject that represents one note.
+ */
 export class NoteGameObject extends GameObject{
     constructor(renderEngine: RenderGameEngineComponent, fret: Fret) {
         super("Note " + fret.toString());

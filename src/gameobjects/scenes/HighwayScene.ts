@@ -12,6 +12,9 @@ import {GridGameObject} from "../GridGameObject.ts";
 import {GizmoGameObject} from "../GizmoGameObject.ts";
 import {GameLogicGameObject} from "../GameLogicGameObject.ts";
 
+/**
+ * A scene that represents the highway scene.
+ */
 export class HighwayScene extends GameObject{
     constructor(gameEngineWindow: GameEngineWindow, debug: boolean) {
         super("HighwayScene");

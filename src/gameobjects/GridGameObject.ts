@@ -1,6 +1,9 @@
 import {Color, GameObject, RenderGameEngineComponent} from "sprunk-engine";
 import {GridRenderBehavior} from "../debug/GridRenderBehavior.ts";
 
+/**
+ * A GameObject that represents the grid.
+ */
 export class GridGameObject extends GameObject{
     /**
      * Create the road GameObject
