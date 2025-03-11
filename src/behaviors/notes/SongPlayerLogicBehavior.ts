@@ -1,15 +1,47 @@
-import {LogicBehavior} from "sprunk-engine";
+import {AudioBehavior, LogicBehavior} from "sprunk-engine";
+import { Song } from "../../models/Song";
 
 /**
  * A simple logic behavior that controls a song player based on it's audio input.
  */
 export class SongPlayerLogicBehavior extends LogicBehavior<number>{
     private _time : number = 0;
-    //TODO : Implement audio playback + notify NotesManagerLogicBehavior
+    private _song! : Song;
+
+    constructor(song : Song) {
+        super();
+        this._song = song;
+    }
+
+    protected onEnable(): void {
+        super.onEnable();
+        this.loadSong().then(() => this.play());
+    }
+
     tick(_deltaTime: number) {
-        this._time += _deltaTime;
+        this._time = this.gameObject.getFirstBehavior(AudioBehavior)!.getTimestamp();
         this.data = this._time;
         this.notifyDataChanged();
         super.tick(_deltaTime);
+    }
+
+    /**
+     * Load all the song parts
+     */
+    private async loadSong() {
+        this._song.songPartsPath.forEach((partPath) => {
+            const audioBehavior = new AudioBehavior();
+            audioBehavior.setAudio(partPath);
+            this.gameObject.addBehavior(audioBehavior);
+        });
+    }
+
+    /**
+     * Play all the song parts (only to be called once every part is loaded)
+     */
+    private play() {
+        this.gameObject.getBehaviors(AudioBehavior).forEach((audioBehavior) => {
+            audioBehavior.play();
+        });
     }
 }
