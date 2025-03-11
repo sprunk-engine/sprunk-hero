@@ -1,30 +1,18 @@
 import {
-    Camera,
     GameEngineWindow,
-    GameObject,
-    RenderGameEngineComponent,
-    SpriteRenderBehavior,
-    Sprunk
+    Sprunk,
 } from "sprunk-engine";
+import {HighwayScene} from "./gameobjects/scenes/HighwayScene.ts";
 
 const canvas: HTMLCanvasElement =
     document.querySelector<HTMLCanvasElement>("#app")!;
 
-const gameEngineWindow: GameEngineWindow = Sprunk.newGame(canvas, true, [
+const debug = false;
+
+const gameEngineWindow: GameEngineWindow = Sprunk.newGame(canvas, debug, [
     "InputGameEngineComponent",
     "RenderGameEngineComponent",
 ]);
-const renderComponent: RenderGameEngineComponent =
-    gameEngineWindow.getEngineComponent(RenderGameEngineComponent)!;
 
-const go = new GameObject("Sprite");
-gameEngineWindow.root.addChild(go);
-
-go.addBehavior(
-    new SpriteRenderBehavior(renderComponent, "/sprunk.png"),
-);
-
-const cameraGo = new GameObject("Camera");
-cameraGo.addBehavior(new Camera(renderComponent, Math.PI / 2));
-cameraGo.transform.position.z = 10;
-gameEngineWindow.root.addChild(cameraGo);
+const scene = new HighwayScene(gameEngineWindow, debug);
+gameEngineWindow.root.addChild(scene);

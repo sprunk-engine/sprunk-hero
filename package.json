@@ -13,6 +13,6 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
-    "sprunk-engine": "^0.2.2"
+    "sprunk-engine": "^0.2.5"
   }
 }
