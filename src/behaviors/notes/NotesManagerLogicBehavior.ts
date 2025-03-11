@@ -2,7 +2,7 @@ import {GameObject, LogicBehavior, RenderGameEngineComponent} from "sprunk-engin
 import {Chart} from "../../models/Chart.ts";
 import {Mode} from "../../models/Mode.ts";
 import {FretLogicBehavior} from "./FretLogicBehavior.ts";
-import {Fret} from "../../models/NoteTextureColor.ts";
+import {Fret} from "../../models/Fret.ts";
 import {NoteGameObject} from "../../gameobjects/NoteGameObject.ts";
 
 /**

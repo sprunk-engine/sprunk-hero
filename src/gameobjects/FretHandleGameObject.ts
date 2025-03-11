@@ -1,6 +1,6 @@
 import {GameObject, InputGameEngineComponent, RenderGameEngineComponent} from "sprunk-engine";
 import {FretGameObject} from "./FretGameObject.ts";
-import {Fret} from "../models/NoteTextureColor.ts";
+import {Fret} from "../models/Fret.ts";
 import {FretLogicBehavior} from "../behaviors/notes/FretLogicBehavior.ts";
 
 /**
