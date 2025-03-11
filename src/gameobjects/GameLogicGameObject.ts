@@ -1,5 +1,4 @@
 import {GameObject, InputGameEngineComponent, RenderGameEngineComponent} from "sprunk-engine";
-import {FretHandleGameObject} from "./FretHandleGameObject.ts";
 import {RoadGameObject} from "./RoadGameObject.ts";
 import {NotesManagerLogicBehavior} from "../behaviors/notes/NotesManagerLogicBehavior.ts";
 import {SongPlayerLogicBehavior} from "../behaviors/notes/SongPlayerLogicBehavior.ts";

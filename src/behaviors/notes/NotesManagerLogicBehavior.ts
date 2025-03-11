@@ -1,4 +1,4 @@
-import {GameObject, LogicBehavior, MeshData, ObjLoader, RenderGameEngineComponent} from "sprunk-engine";
+import {GameObject, LogicBehavior, RenderGameEngineComponent} from "sprunk-engine";
 import {Chart} from "../../models/Chart.ts";
 import {Mode} from "../../models/Mode.ts";
 import {FretLogicBehavior} from "./FretLogicBehavior.ts";
