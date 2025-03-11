@@ -1,5 +1,8 @@
 import {GameObject, LogicBehavior, OutputBehavior} from "sprunk-engine";
 
+/**
+ * A simple logic behavior that handle a boolean as scale output.
+ */
 export class BooleanScaleOutputBehavior extends OutputBehavior{
     private _isPressed : boolean = false;
     private _currentScale : number;

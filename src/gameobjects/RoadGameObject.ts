@@ -5,6 +5,9 @@ import {
     RepeatableForwardOutputBehavior
 } from "../behaviors/transform/RepeatableForwardOutputBehavior.ts";
 
+/**
+ * A GameObject that represents the moving road.
+ */
 export class RoadGameObject extends GameObject{
     /**
      * Create the road GameObject

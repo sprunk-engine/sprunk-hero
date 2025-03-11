@@ -2,6 +2,9 @@ import {GameObject, MeshRenderBehavior, ObjLoader, RenderGameEngineComponent} fr
 import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
 
+/**
+ * A GameObject that represents the gizmo.
+ */
 export class GizmoGameObject extends GameObject{
     /**
      * Create the road GameObject

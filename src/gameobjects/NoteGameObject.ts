@@ -3,11 +3,15 @@ import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
 import {Fret} from "../models/NoteTextureColor.ts";
 
+/**
+ * A GameObject that represents one note.
+ */
 export class NoteGameObject extends GameObject{
     constructor(renderEngine: RenderGameEngineComponent, fret: Fret) {
         super("Note " + fret.toString());
 
         this.transform.scale.set(0.45, 0.45, 0.45);
+        this.transform.position.x = fret.position;
 
         ObjLoader.load("/assets/note/note.obj").then((obj) => {
             this.addBehavior(

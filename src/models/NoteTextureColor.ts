@@ -42,6 +42,9 @@ export class Fret{
     }
 
     static fromIndex(index : number) : Fret {
+        if(index < 0 || index > 4){
+            throw new Error("Invalid index");
+        }
         return new Fret(index);
     }
 
