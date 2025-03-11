@@ -9,14 +9,12 @@ import { Section } from "../../models/Section.ts";
  * ChartParser implements the parsing of .chart files into structured data.
  */
 export class ChartParser implements Parser {
+  /**
+   * Required sections that must be present in the chart file.
+   * [Song] is mandatory as it contains essential metadata like audio file path.
+   */
   private readonly _requiredSections = ["[Song]"] as const;
 
-  /**
-   * Parses a .chart file into a structured Chart object.
-   * @param chartFilePath - Path to the .chart file
-   * @returns Parsed Chart object
-   * @throws Error if file loading or parsing fails
-   */
   public parse(chartFilePath: string): Chart {
     const content = this.loadChartFile(chartFilePath);
     this.validateChartFile(content);
@@ -29,6 +27,13 @@ export class ChartParser implements Parser {
     };
   }
 
+  /**
+   * Loads the chart file using XMLHttpRequest synchronously to ensure that the chart file is loaded before we can parse it.
+   *
+   * @param chartFilePath - Path to the chart file
+   * @returns The content of the chart file as a string
+   * @throws Error if file loading fails
+   */
   private loadChartFile(chartFilePath: string): string {
     const request = new XMLHttpRequest();
     const path = chartFilePath.startsWith("/")
@@ -59,7 +64,7 @@ export class ChartParser implements Parser {
     let currentSection = "";
     let currentContent: string[] = [];
 
-    content.split("\n").forEach((line) => {
+    content.split(/\r?\n/).forEach((line) => {
       const trimmedLine = line.trim();
       if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
         if (currentSection) {
@@ -90,6 +95,15 @@ export class ChartParser implements Parser {
     return sections;
   }
 
+  /**
+   * Parses the Song section into a Song object.
+   * It create a temporary object with the song data and then convert it to a Song object.
+   * It provides default values for optional fields since the chart file is not always complete or has the same attributes.
+   *
+   * @param sections - Array of all parsed sections
+   * @returns Parsed Song object with metadata
+   * @throws Error if Song section is not found
+   */
   private parseSong(sections: Section[]): Song {
     const songSection = sections.find((section) => section.key === "Song");
     if (!songSection) {
@@ -98,9 +112,17 @@ export class ChartParser implements Parser {
 
     const songData = Object.fromEntries(
       songSection.content
-        .map((line) => line.split("=").map((part) => part.trim()))
+        .map((line) => {
+          const [key, ...valueParts] = line.split("=");
+          const value = valueParts.join("=").trim();
+          return [
+            key.trim(),
+            value.startsWith('"') && value.endsWith('"')
+              ? value.slice(1, -1)
+              : value,
+          ];
+        })
         .filter(([key, value]) => key && value)
-        .map(([key, value]) => [key, value.replace(/"/g, "")])
     );
 
     return {
