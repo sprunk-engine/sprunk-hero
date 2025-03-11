@@ -1,7 +1,7 @@
 import {OutputBehavior} from "sprunk-engine";
 
 /**
- * A simple logic behavior that
+ * A simple logic behavior that move in Z direction the gameobject attached to
  */
 export class ForwardOutputBehavior extends OutputBehavior{
     protected speed : number;
