@@ -2,8 +2,8 @@ import {GameObject, InputGameEngineComponent, RenderGameEngineComponent} from "s
 import {RoadGameObject} from "./RoadGameObject.ts";
 import {NotesManagerLogicBehavior} from "../behaviors/notes/NotesManagerLogicBehavior.ts";
 import {SongPlayerLogicBehavior} from "../behaviors/notes/SongPlayerLogicBehavior.ts";
-import {exampleChart} from "../data/ChartExample.ts";
 import {FretHandleGameObject} from "./FretHandleGameObject.ts";
+import {ChartParser} from "../services/chart/ChartParser.ts";
 
 /**
  * A GameObject that hold ann the movables components + game logic components of the scene (exluding camera, effects and background)
@@ -23,6 +23,8 @@ export class GameLogicGameObject extends GameObject{
         const noteManagter = new NotesManagerLogicBehavior(renderEngine, fretsLane.fretLogicBehaviors);
         this.addBehavior(noteManagter);
 
-        noteManagter.setChart(exampleChart, exampleChart.modes[0]);
+        const chart = new ChartParser().parse("/assets/songs/BillyTalen-RedFlag/notes.chart");
+        console.log(chart)
+        noteManagter.setChart(chart, chart.modes[0]);
     }
 }
