@@ -1,4 +1,4 @@
-import {LogicBehavior, OutputBehavior, RenderGameEngineComponent, TextRenderBehavior} from "sprunk-engine";
+import {LogicBehavior, RenderGameEngineComponent, TextRenderBehavior} from "sprunk-engine";
 import {Score} from "../../models/Score.ts";
 
 export class ScoreDisplayOutputbehavior extends TextRenderBehavior{
