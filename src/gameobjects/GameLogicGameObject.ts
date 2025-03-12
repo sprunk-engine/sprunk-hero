@@ -1,7 +1,6 @@
 import {GameObject, InputGameEngineComponent, RenderGameEngineComponent} from "sprunk-engine";
 import {RoadGameObject} from "./RoadGameObject.ts";
 import {NotesManagerLogicBehavior} from "../behaviors/notes/NotesManagerLogicBehavior.ts";
-import {SongPlayerLogicBehavior} from "../behaviors/notes/SongPlayerLogicBehavior.ts";
 import {FretHandleGameObject} from "./FretHandleGameObject.ts";
 import {MidiParser} from "../services/MidiParser.ts";
 
@@ -18,8 +17,6 @@ export class GameLogicGameObject extends GameObject{
         const road = new RoadGameObject(renderEngine);
         this.addChild(road);
 
-        const sontPlayBack = new SongPlayerLogicBehavior();
-        this.addBehavior(sontPlayBack);
         const noteManagter = new NotesManagerLogicBehavior(renderEngine, fretsLane.fretLogicBehaviors);
         this.addBehavior(noteManagter);
 
