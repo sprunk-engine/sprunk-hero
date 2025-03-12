@@ -7,6 +7,7 @@ import { Song } from "../../models/Song";
 export class SongPlayerLogicBehavior extends LogicBehavior<number>{
     private _time : number = 0;
     private _song! : Song;
+    private _audioBehaviors : AudioBehavior[] = [];
 
     constructor(song : Song) {
         super();
@@ -19,7 +20,8 @@ export class SongPlayerLogicBehavior extends LogicBehavior<number>{
     }
 
     tick(_deltaTime: number) {
-        this._time = this.gameObject.getFirstBehavior(AudioBehavior)!.getTimestamp();
+        if(this._audioBehaviors.length === 0) return;
+        this._time = this._audioBehaviors[0].getTimestamp();
         this.data = this._time;
         this.notifyDataChanged();
         super.tick(_deltaTime);
@@ -33,6 +35,7 @@ export class SongPlayerLogicBehavior extends LogicBehavior<number>{
             const audioBehavior = new AudioBehavior();
             await audioBehavior.setAudio(partPath);
             this.gameObject.addBehavior(audioBehavior);
+            this._audioBehaviors.push(audioBehavior);
         }));
     }
 

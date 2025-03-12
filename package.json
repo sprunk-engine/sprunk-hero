@@ -13,6 +13,7 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
-    "sprunk-engine": "^0.2.5"
+    "@tonejs/midi": "^2.0.28",
+    "sprunk-engine": "^0.2.6"
   }
 }
