@@ -1,7 +1,7 @@
 import {GameObject, MeshRenderBehavior, ObjLoader, RenderGameEngineComponent} from "sprunk-engine";
 import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
-import {Fret} from "../models/NoteTextureColor.ts";
+import {Fret} from "../models/Fret.ts";
 
 /**
  * A GameObject that represents one note.

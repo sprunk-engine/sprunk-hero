@@ -1,5 +1,5 @@
 import {LogicBehavior} from "sprunk-engine";
-import {Fret} from "../../models/NoteTextureColor.ts";
+import {Fret} from "../../models/Fret.ts";
 
 /**
  * A simple logic behavior that controls a fret input.

@@ -7,7 +7,7 @@ import {
 } from "sprunk-engine";
 import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
-import {Fret} from "../models/NoteTextureColor.ts";
+import {Fret} from "../models/Fret.ts";
 import {FretLogicBehavior} from "../behaviors/notes/FretLogicBehavior.ts";
 import {FretInputBehavior} from "../behaviors/notes/FretInputBehavior.ts";
 import {BooleanScaleOutputBehavior} from "../behaviors/transform/BooleanScaleOutputBehavior.ts";
