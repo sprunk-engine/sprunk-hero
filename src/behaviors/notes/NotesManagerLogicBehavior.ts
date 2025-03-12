@@ -100,19 +100,16 @@ export class NotesManagerLogicBehavior extends LogicBehavior<void>{
 
     private bustNote(note: NoteGameObject, pressPrecision: number) {
         this._container!.removeChild(note);
-        console.log("Hit note", note, "with precision", pressPrecision);
         note.wasProcessed = true;
         this.onHitNote.emit({note, precision: pressPrecision});
     }
 
     private missNote(note: NoteGameObject) {
-        console.log("Missed note", note);
         note.wasProcessed = true;
         this.onMissNote.emit(note);
     }
 
     private hitNothing(fret: Fret) {
-        console.log("Hit nothing on fret", fret);
         this.onHitNothing.emit(fret);
     }
 }

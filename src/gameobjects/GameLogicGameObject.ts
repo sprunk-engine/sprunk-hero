@@ -4,6 +4,7 @@ import {NotesManagerLogicBehavior} from "../behaviors/notes/NotesManagerLogicBeh
 import {FretHandleGameObject} from "./FretHandleGameObject.ts";
 import {MidiParser} from "../services/MidiParser.ts";
 import {SongPlayerLogicBehavior} from "../behaviors/notes/SongPlayerLogicBehavior.ts";
+import {ScoreLogicBehavior} from "../behaviors/notes/ScoreLogicBehavior.ts";
 
 /**
  * A GameObject that hold ann the movables components + game logic components of the scene (exluding camera, effects and background)
@@ -30,6 +31,18 @@ export class GameLogicGameObject extends GameObject{
             const noteManagter = new NotesManagerLogicBehavior(renderEngine, fretsLane.fretLogicBehaviors);
             this.addBehavior(noteManagter);
             noteManagter.setChart(chart.modes[0]);
+
+            const scoreBehavior = new ScoreLogicBehavior();
+            this.addBehavior(scoreBehavior);
+            noteManagter.onHitNote.addObserver((data) => {
+                scoreBehavior.hitNote(data.note, data.precision);
+            });
+            noteManagter.onHitNothing.addObserver((fret) => {
+                scoreBehavior.hitNothing(fret);
+            });
+            noteManagter.onMissNote.addObserver((note) => {
+                scoreBehavior.missNote(note);
+            });
         });
     }
 }
