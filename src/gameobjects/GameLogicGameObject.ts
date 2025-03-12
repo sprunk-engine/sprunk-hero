@@ -29,7 +29,7 @@ export class GameLogicGameObject extends GameObject{
 
             const noteManagter = new NotesManagerLogicBehavior(renderEngine, fretsLane.fretLogicBehaviors);
             this.addBehavior(noteManagter);
-            noteManagter.setChart(chart, chart.modes[0]);
+            noteManagter.setChart(chart.modes[0]);
         });
     }
 }
