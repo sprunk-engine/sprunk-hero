@@ -29,11 +29,11 @@ export class SongPlayerLogicBehavior extends LogicBehavior<number>{
      * Load all the song parts
      */
     private async loadSong() {
-        this._song.songPartsPath.forEach((partPath) => {
+        await Promise.all(this._song.songPartsPath.map(async (partPath) => {
             const audioBehavior = new AudioBehavior();
-            audioBehavior.setAudio(partPath);
+            await audioBehavior.setAudio(partPath);
             this.gameObject.addBehavior(audioBehavior);
-        });
+        }));
     }
 
     /**
