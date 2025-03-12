@@ -1,10 +1,11 @@
-import {GameObject, InputGameEngineComponent, RenderGameEngineComponent} from "sprunk-engine";
+import {GameObject, InputGameEngineComponent, RenderGameEngineComponent, Vector3} from "sprunk-engine";
 import {RoadGameObject} from "./RoadGameObject.ts";
 import {NotesManagerLogicBehavior} from "../behaviors/notes/NotesManagerLogicBehavior.ts";
 import {FretHandleGameObject} from "./FretHandleGameObject.ts";
 import {MidiParser} from "../services/MidiParser.ts";
 import {SongPlayerLogicBehavior} from "../behaviors/notes/SongPlayerLogicBehavior.ts";
 import {ScoreLogicBehavior} from "../behaviors/notes/ScoreLogicBehavior.ts";
+import {ScoreDisplayOutputbehavior} from "../behaviors/notes/ScoreDisplayOutputbehavior.ts";
 
 /**
  * A GameObject that hold ann the movables components + game logic components of the scene (exluding camera, effects and background)
@@ -33,7 +34,6 @@ export class GameLogicGameObject extends GameObject{
             noteManagter.setChart(chart.modes[0]);
 
             const scoreBehavior = new ScoreLogicBehavior();
-            this.addBehavior(scoreBehavior);
             noteManagter.onHitNote.addObserver((data) => {
                 scoreBehavior.hitNote(data.note, data.precision);
             });
@@ -43,6 +43,13 @@ export class GameLogicGameObject extends GameObject{
             noteManagter.onMissNote.addObserver((note) => {
                 scoreBehavior.missNote(note);
             });
+
+            const scoreGameObject = new GameObject("Score");
+            scoreGameObject.transform.position.set(0, 2.6, -5);
+            scoreGameObject.transform.rotation.rotateAroundAxis(Vector3.right(), -Math.PI / 8);
+            this.addChild(scoreGameObject);
+            scoreGameObject.addBehavior(scoreBehavior);
+            scoreGameObject.addBehavior(new ScoreDisplayOutputbehavior(renderEngine));
         });
     }
 }
