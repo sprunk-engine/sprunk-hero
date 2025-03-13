@@ -16,26 +16,9 @@ export class FretGamepadInputBehavior extends DeviceInputBehavior {
     this._logic = logic;
   }
 
-  protected override onEnable(): void {
-    super.onEnable();
-    const gamepad = this.inputEngineComponent.getDevice(GamepadDevice);
-    if (gamepad) {
-      console.log("Gamepads", gamepad);
-      gamepad.onButtonDown.addObserver((buttonIndex) => {
-        this.onGamepadButtonDown(buttonIndex);
-        console.log("Gamepad button down", buttonIndex);
-      });
-    }
-
-    this.inputEngineComponent.onDeviceAdded.addObserver((device) => {
-      console.log("Device added", device);
-      if (device instanceof GamepadDevice) {
-        device.onButtonDown.addObserver((buttonIndex) => {
-          this.onGamepadButtonDown(buttonIndex);
-          console.log("Gamepad button down", buttonIndex);
-        });
-      }
-    });
+  onGamepadButtonDown(_buttonIndex: number) {
+    super.onGamepadButtonDown(_buttonIndex);
+    console.log(_buttonIndex)
   }
 
   protected onPressed() {
