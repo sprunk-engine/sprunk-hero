@@ -1,12 +1,12 @@
 import { DeviceInputBehavior, InputGameEngineComponent } from "sprunk-engine";
 import { FretLogicBehavior } from "./FretLogicBehavior.ts";
-import { GamepadDevice } from "sprunk-engine";
 
 /**
  * A logic behavior that controls a fret input with gamepad input.
  */
 export class FretGamepadInputBehavior extends DeviceInputBehavior {
   private _logic: FretLogicBehavior;
+  private _buttonState: boolean = false;
 
   constructor(
     inputEngineComponent: InputGameEngineComponent,
@@ -18,7 +18,28 @@ export class FretGamepadInputBehavior extends DeviceInputBehavior {
 
   onGamepadButtonDown(_buttonIndex: number) {
     super.onGamepadButtonDown(_buttonIndex);
-    console.log(_buttonIndex)
+    if (_buttonIndex === this._logic.fret.gamepadKey) {
+      this._buttonState = true;
+    }
+    if (_buttonIndex === 12 || _buttonIndex === 13) {
+      if (this._buttonState) {
+        this.onPressed();
+      }
+    }
+  }
+
+  onGamepadButtonUp(_buttonIndex: number) {
+    super.onGamepadButtonUp(_buttonIndex);
+    if (_buttonIndex === this._logic.fret.gamepadKey) {
+      this._buttonState = false;
+      this.onReleased();
+    }
+
+    if (_buttonIndex === 12 || _buttonIndex === 13) {
+      if (this._buttonState) {
+        this.onReleased();
+      }
+    }
   }
 
   protected onPressed() {
