@@ -7,6 +7,7 @@ import {SongPlayerLogicBehavior} from "../behaviors/notes/SongPlayerLogicBehavio
 import {ScoreLogicBehavior} from "../behaviors/notes/ScoreLogicBehavior.ts";
 import {ScoreDisplayOutputbehavior} from "../behaviors/notes/ScoreDisplayOutputbehavior.ts";
 import {FretVisualFeedbackSpawnerLogicBehavior} from "../behaviors/notes/FretVisualFeedbackSpawnerLogicBehavior.ts";
+import {ScoreTextsGameObject} from "./ScoreTextsGameObject.ts";
 
 /**
  * A GameObject that hold ann the movables components + game logic components of the scene (exluding camera, effects and background)
@@ -40,6 +41,7 @@ export class GameLogicGameObject extends GameObject{
             visualFeedbackSpawner.addBehavior(visualFeedbackSpawnerBehavior);
 
             const scoreBehavior = new ScoreLogicBehavior();
+            this.addBehavior(scoreBehavior);
             noteManagter.onHitNote.addObserver((data) => {
                 scoreBehavior.hitNote(data.note, data.precision);
                 visualFeedbackSpawnerBehavior.showHitNote(data.note, data.precision);
@@ -53,12 +55,8 @@ export class GameLogicGameObject extends GameObject{
                 visualFeedbackSpawnerBehavior.showMissNote(note);
             });
 
-            const scoreGameObject = new GameObject("Score");
-            scoreGameObject.transform.position.set(0, 2.6, -5);
-            scoreGameObject.transform.rotation.rotateAroundAxis(Vector3.right(), -Math.PI / 8);
+            const scoreGameObject = new ScoreTextsGameObject(renderEngine, scoreBehavior);
             this.addChild(scoreGameObject);
-            scoreGameObject.addBehavior(scoreBehavior);
-            scoreGameObject.addBehavior(new ScoreDisplayOutputbehavior(renderEngine));
         });
     }
 }

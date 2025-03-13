@@ -13,7 +13,7 @@ export class ScoreLogicBehavior extends LogicBehavior<Score>{
         this.data = {
             score: this.data.score + this.computeScore(precision) * this.data.multiplier,
             streak: this.data.streak + 1,
-            multiplier: Math.min(1 + Math.floor(this.data.streak / 5), 5),
+            multiplier: Math.min(1 + Math.floor(this.data.streak / 5), 4),
         };
         this.notifyDataChanged();
     }
