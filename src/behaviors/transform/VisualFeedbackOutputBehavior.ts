@@ -36,7 +36,7 @@ export class VisualFeedbackOutputBehavior extends TextRenderBehavior{
         this.transform.scale.set(animationTime*0.4, animationTime*0.4, animationTime*0.4);
         this.color = [this.color[0], this.color[1], this.color[2], 1 - (animationTime*3-1.5)];
         if(this._time > this._totalTime){
-            this.transform.position.set(0, -100, 0);
+            this.onAnimationEnd.emit();
         }
     }
 }
