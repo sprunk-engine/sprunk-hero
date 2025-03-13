@@ -6,6 +6,7 @@ import {MidiParser} from "../services/MidiParser.ts";
 import {SongPlayerLogicBehavior} from "../behaviors/notes/SongPlayerLogicBehavior.ts";
 import {ScoreLogicBehavior} from "../behaviors/notes/ScoreLogicBehavior.ts";
 import {ScoreDisplayOutputbehavior} from "../behaviors/notes/ScoreDisplayOutputbehavior.ts";
+import {FretVisualFeedbackSpawnerLogicBehavior} from "../behaviors/notes/FretVisualFeedbackSpawnerLogicBehavior.ts";
 
 /**
  * A GameObject that hold ann the movables components + game logic components of the scene (exluding camera, effects and background)
@@ -33,15 +34,23 @@ export class GameLogicGameObject extends GameObject{
             this.addBehavior(noteManagter);
             noteManagter.setChart(chart.modes[0]);
 
+            const visualFeedbackSpawner = new GameObject("VisualFeedbackSpawner");
+            this.addChild(visualFeedbackSpawner);
+            const visualFeedbackSpawnerBehavior = new FretVisualFeedbackSpawnerLogicBehavior(renderEngine);
+            visualFeedbackSpawner.addBehavior(visualFeedbackSpawnerBehavior);
+
             const scoreBehavior = new ScoreLogicBehavior();
             noteManagter.onHitNote.addObserver((data) => {
                 scoreBehavior.hitNote(data.note, data.precision);
+                visualFeedbackSpawnerBehavior.showHitNote(data.note, data.precision);
             });
             noteManagter.onHitNothing.addObserver((fret) => {
                 scoreBehavior.hitNothing(fret);
+                visualFeedbackSpawnerBehavior.showHitNothing(fret);
             });
             noteManagter.onMissNote.addObserver((note) => {
                 scoreBehavior.missNote(note);
+                visualFeedbackSpawnerBehavior.showMissNote(note);
             });
 
             const scoreGameObject = new GameObject("Score");
