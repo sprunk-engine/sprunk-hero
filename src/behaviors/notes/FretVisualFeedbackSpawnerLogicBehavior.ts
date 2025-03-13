@@ -37,10 +37,10 @@ export class FretVisualFeedbackSpawnerLogicBehavior extends LogicBehavior<void>{
         const to = new Vector3(fret.position,1,0.1);
         const feedbackBehavior = new VisualFeedbackOutputBehavior(this._renderEngine, color, text, from, to, 0.6);
         gameObject.addBehavior(feedbackBehavior);
+        this.gameObject.addChild(gameObject);
         feedbackBehavior.onAnimationEnd.addObserver(() => {
             this.gameObject.removeChild(gameObject);
         });
-        this.gameObject.addChild(gameObject);
     }
     private getScoreText(precision : number) {
         if(precision < 0.05) return "Perfect!";

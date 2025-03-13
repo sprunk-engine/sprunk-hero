@@ -11,24 +11,26 @@ export class ScoreLogicBehavior extends LogicBehavior<Score>{
 
     public hitNote(_note : NoteGameObject, precision : number) {
         this.data = {
-            ...this.data,
-            score: this.data.score + this.computeScore(precision)
+            score: this.data.score + this.computeScore(precision) * this.data.multiplier,
+            streak: this.data.streak + 1,
+            multiplier: Math.min(1 + Math.floor(this.data.streak / 5), 5),
         };
         this.notifyDataChanged();
     }
 
     public hitNothing(_fret : Fret) {
-        this.data = {
-            ...this.data,
-            score: this.data.score - 50
-        };
-        this.notifyDataChanged();
+        this.resetStreak();
     }
 
     public missNote(_note : NoteGameObject) {
+        this.resetStreak();
+    }
+
+    private resetStreak() {
         this.data = {
             ...this.data,
-            score: this.data.score - 100
+            streak: defaultScore.streak,
+            multiplier: defaultScore.multiplier,
         };
         this.notifyDataChanged();
     }
