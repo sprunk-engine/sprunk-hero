@@ -39,7 +39,7 @@ export class FretVisualFeedbackSpawnerLogicBehavior extends LogicBehavior<void>{
         gameObject.addBehavior(feedbackBehavior);
         this.gameObject.addChild(gameObject);
         feedbackBehavior.onAnimationEnd.addObserver(() => {
-            this.gameObject.removeChild(gameObject);
+            gameObject.destroy();
         });
     }
     private getScoreText(precision : number) {
