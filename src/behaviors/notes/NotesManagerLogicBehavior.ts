@@ -64,6 +64,10 @@ export class NotesManagerLogicBehavior extends LogicBehavior<void>{
         if(this._container) {
             this._container.transform.position.z = songTime * this._speed;
         }
+        const notesToEnable = this.getNotesAroundTime(songTime+3, 1);
+        notesToEnable.forEach((note) => note.enableRendering());
+        const notesToDisable = this.getNotesAroundTime(songTime-2, 1);
+        notesToDisable.forEach((note) => note.disableRendering());
         this.getMissedNotes(NotesManagerLogicBehavior.MISSED_NOTE_RANGE).forEach((note) => this.missNote(note));
     }
 
