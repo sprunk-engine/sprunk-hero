@@ -11,6 +11,9 @@ export class NoteGameObject extends GameObject{
     public associatedNote : Note;
     public wasProcessed : boolean = false;
 
+    private _meshRenderBehavior : MeshRenderBehavior | undefined;
+    private _needRendering : boolean = false;
+
     constructor(renderEngine: RenderGameEngineComponent, note : Note) {
         super("Note");
         const fret = Fret.fromIndex(note.fret);
@@ -20,21 +23,38 @@ export class NoteGameObject extends GameObject{
         this.transform.position.x = fret.position;
 
         ObjLoader.load("/assets/note/note.obj").then((obj) => {
-            this.addBehavior(
-                new MeshRenderBehavior(
-                    renderEngine,
-                    obj,
-                    fret.texturePath,
-                    BasicVertexMVPWithUV,
-                    BasicTextureSample,
-                    {
-                        addressModeU: "repeat",
-                        addressModeV: "repeat",
-                        magFilter: "linear",
-                        minFilter: "linear",
-                    }
-                ),
-            )
+            this._meshRenderBehavior = new MeshRenderBehavior(
+                renderEngine,
+                obj,
+                fret.texturePath,
+                BasicVertexMVPWithUV,
+                BasicTextureSample,
+                {
+                    addressModeU: "repeat",
+                    addressModeV: "repeat",
+                    magFilter: "linear",
+                    minFilter: "linear",
+                }
+            );
+            if(this._needRendering){
+                this.enableRendering();
+            }
         });
+    }
+
+    public enableRendering() {
+        if(this._needRendering) return;
+        this._needRendering = true;
+        if(this._meshRenderBehavior){
+            this.addBehavior(this._meshRenderBehavior);
+        }
+    }
+
+    public disableRendering() {
+        if(!this._needRendering) return;
+        this._needRendering = false;
+        if(this._meshRenderBehavior) {
+            this.removeBehavior(this._meshRenderBehavior);
+        }
     }
 }
