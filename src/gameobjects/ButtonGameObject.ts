@@ -1,14 +1,20 @@
 import {
-    Camera,
+    Camera, Event,
     GameObject,
     InputGameEngineComponent,
     Renderer,
-    SpriteRenderBehavior, Vector2
+    SpriteRenderBehavior, Vector2, Vector3
 } from "sprunk-engine";
 import {ButtonLogicBehavior} from "../behaviors/ui/ButtonLogicBehavior.ts";
 import {ButtonInputBehavior} from "../behaviors/ui/ButtonInputBehavior.ts";
+import {ScalingOutputBehavior} from "../behaviors/transform/ScalingOutputBehavior.ts";
 
 export class ButtonGameObject extends GameObject{
+    /**
+     * When the button is clicked.
+     */
+    public onClicked : Event<void> = new Event<void>();
+
     /**
      * Creates a new ButtonGameObject.
      * @param camera
@@ -24,5 +30,21 @@ export class ButtonGameObject extends GameObject{
         const logicBehavior = new ButtonLogicBehavior(perceivedSize);
         this.addBehavior(logicBehavior);
         this.addBehavior(new ButtonInputBehavior(camera, inputEngineComponent, logicBehavior));
+        const scalingOutputBehavior = new ScalingOutputBehavior(0.1);
+        logicBehavior.onDataChanged.addObserver((data) => {
+            if(data.hovered){
+                if(data.clicked){
+                    scalingOutputBehavior.transitionToScale(new Vector3(0.5, 0.5, 1));
+                } else {
+                    scalingOutputBehavior.transitionToScale(new Vector3(1.25, 1.25, 1));
+                }
+            }else{
+                scalingOutputBehavior.transitionToScale(new Vector3(1,1,1));
+            }
+        });
+        logicBehavior.onButtonPressAndRelease.addObserver(() => {
+            this.onClicked.emit();
+        });
+        this.addBehavior(scalingOutputBehavior)
     }
 }
