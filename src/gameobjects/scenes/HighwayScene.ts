@@ -32,17 +32,9 @@ export class HighwayScene extends GameObject{
         const cameraGo = new GameObject("Camera");
         const camera = new Camera(this._renderComponent, Math.PI / 3, undefined, undefined, 30);
         cameraGo.addBehavior(camera);
-        cameraGo.transform.position.set(0, 2.5, 3);
-        cameraGo.transform.rotation.rotateAroundAxis(Vector3.right(),-Math.PI / 8)
+        cameraGo.transform.position.set(0, 2, 3);
+        cameraGo.transform.rotation.rotateAroundAxis(Vector3.right(),-Math.PI / 10)
         this.addChild(cameraGo);
-
-        const background = new GameObject("Background");
-        background.transform.position.set(0, 0, -29.99);
-        const size = 40;
-        background.transform.scale.x = size*16/9;
-        background.transform.scale.y = size;
-        background.addBehavior(new SpriteRenderBehavior(this._renderComponent, "/assets/background.jpg"))
-        cameraGo.addChild(background);
 
         this._playButton = new ButtonGameObject(camera, this._inputComponent, this._renderComponent, "/assets/play.png", new Vector2(0.9, 0.4));
         this._playButton.transform.position.set(0, 0, -2);

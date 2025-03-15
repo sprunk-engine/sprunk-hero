@@ -37,9 +37,18 @@
         max-height: calc(100vh - 20px);
 
       }
+
+      #background{
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        z-index: -1;
+        object-fit: cover;
+      }
     </style>
   </head>
   <body>
+    <img src="/assets/background.jpg" id="background" alt="background" />
     <canvas id="app"></canvas>
     <script type="module" src="/src/main.ts"></script>
   </body>
