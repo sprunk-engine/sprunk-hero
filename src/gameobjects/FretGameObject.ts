@@ -17,8 +17,6 @@ import { BooleanScaleOutputBehavior } from "../behaviors/transform/BooleanScaleO
  * A GameObject that represents a fret.
  */
 export class FretGameObject extends GameObject {
-  public readonly fretLogicBehavior: FretLogicBehavior;
-
   constructor(
     renderEngine: RenderGameEngineComponent,
     input: InputGameEngineComponent,
@@ -46,8 +44,7 @@ export class FretGameObject extends GameObject {
       );
     });
 
-    this.fretLogicBehavior = new FretLogicBehavior(fret);
-    this.addBehavior(this.fretLogicBehavior);
+    this.addBehavior(new FretLogicBehavior(fret));
     this.addBehavior(new BooleanScaleOutputBehavior(0.35, 0.55, 0.03));
     this.addBehavior(new FretInputBehavior(input));
     this.addBehavior(
