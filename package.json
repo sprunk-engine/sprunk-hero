@@ -15,6 +15,6 @@
   },
   "dependencies": {
     "@tonejs/midi": "^2.0.28",
-    "sprunk-engine": "^0.2.7"
+    "sprunk-engine": "^0.3.0"
   }
 }
