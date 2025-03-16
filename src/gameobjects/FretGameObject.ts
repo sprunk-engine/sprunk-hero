@@ -49,9 +49,9 @@ export class FretGameObject extends GameObject {
     this.fretLogicBehavior = new FretLogicBehavior(fret);
     this.addBehavior(this.fretLogicBehavior);
     this.addBehavior(new BooleanScaleOutputBehavior(0.35, 0.55, 0.03));
-    this.addBehavior(new FretInputBehavior(input, this.fretLogicBehavior));
+    this.addBehavior(new FretInputBehavior(input));
     this.addBehavior(
-      new FretGamepadInputBehavior(input, this.fretLogicBehavior)
+      new FretGamepadInputBehavior(input)
     );
   }
 }

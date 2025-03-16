@@ -1,19 +1,18 @@
-import { DeviceInputBehavior, InputGameEngineComponent } from "sprunk-engine";
+import {DeviceInputBehavior, Inject, InputGameEngineComponent} from "sprunk-engine";
 import { FretLogicBehavior } from "./FretLogicBehavior.ts";
 
 /**
  * A logic behavior that controls a fret input with gamepad input.
  */
 export class FretGamepadInputBehavior extends DeviceInputBehavior {
-  private _logic: FretLogicBehavior;
+  @Inject(FretLogicBehavior,false)
+  private _logic!: FretLogicBehavior;
   private _buttonState: boolean = false;
 
   constructor(
-    inputEngineComponent: InputGameEngineComponent,
-    logic: FretLogicBehavior
+    inputEngineComponent: InputGameEngineComponent
   ) {
     super(inputEngineComponent);
-    this._logic = logic;
   }
 
   onGamepadButtonDown(_buttonIndex: number) {
