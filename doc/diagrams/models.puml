@@ -1,0 +1,38 @@
+@startuml
+interface Note {
+    +time: number
+    +fret: number
+    +duration: number
+}
+interface Mode {
+    +difficulty: string
+    +notes: Note[]
+}
+interface Song {
+    +name: string
+    +artist: string
+    +offset: number
+    +songPartsPath: string[]
+}
+interface Chart {
+    +song: Song
+    +modes: Mode[]
+}
+class Fret {
+    +index: number
+    +name: string
+    +toString(): string
+    +texturePath: string
+    +position: number
+    +keyboardKey: string
+    +gamepadKey: number
+}
+interface Score {
+    +score: number
+    +streak: number
+    +multiplier: number
+}
+Mode --> "*" Note
+Chart --> "1" Song
+Chart --> "*" Mode
+@enduml

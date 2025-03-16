@@ -1,0 +1,15 @@
+@startuml
+class FreeLookCameraController extends LogicBehavior {
+    +move(direction: Vector3): void
+    +look(delta: Vector2): void
+}
+class FreeLookCameraKeyboardMouseInput extends DeviceInputBehavior {
+    #onEnable(): void
+    +onKeyboardKeyDown(key: string): void
+    +onKeyboardKeyUp(key: string): void
+    +tick(_deltaTime: number): void
+    +onMouseMove(__0: { delta: Vector2; }): void
+}
+class GridRenderBehavior extends LinesRenderBehavior
+FreeLookCameraKeyboardMouseInput --> "1" FreeLookCameraController
+@enduml

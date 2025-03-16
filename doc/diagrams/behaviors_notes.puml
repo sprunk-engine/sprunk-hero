@@ -1,0 +1,56 @@
+@startuml
+class FretLogicBehavior extends LogicBehavior {
+    +fret: Fret
+    +onPressed(): void
+    +onReleased(): void
+}
+class FretGamepadInputBehavior extends DeviceInputBehavior {
+    +onGamepadButtonDown(_buttonIndex: number): void
+    +onGamepadButtonUp(_buttonIndex: number): void
+    #onPressed(): void
+    #onReleased(): void
+}
+class FretInputBehavior extends DeviceInputBehavior {
+    +onKeyboardKeyDown(_key: string): void
+    +onKeyboardKeyUp(_key: string): void
+    #onPressed(): void
+    #onReleased(): void
+}
+class FretVisualFeedbackSpawnerLogicBehavior extends LogicBehavior {
+    +showHitNote(_note: NoteGameObject, precision: number): void
+    +showHitNothing(_fret: Fret): void
+    +showMissNote(_note: NoteGameObject): void
+}
+class NotesManagerLogicBehavior extends LogicBehavior {
+    +onHitNote: Event<{ note: NoteGameObject; precision: number; }>
+    +onHitNothing: Event<Fret>
+    +onMissNote: Event<NoteGameObject>
+    #onEnable(): void
+    +setChart(modeToPlay: Mode): void
+    +updateTime(songTime: number): void
+}
+class ScoreLogicBehavior extends LogicBehavior {
+    #onEnable(): void
+    +hitNote(_note: NoteGameObject, precision: number): void
+    +hitNothing(_fret: Fret): void
+    +missNote(_note: NoteGameObject): void
+}
+class SongPlayerLogicBehavior extends LogicBehavior {
+    #onEnable(): void
+    +tick(_deltaTime: number): void
+}
+FretLogicBehavior --> "1" Fret
+FretGamepadInputBehavior --> "1" FretLogicBehavior
+FretInputBehavior --> "1" FretLogicBehavior
+FretVisualFeedbackSpawnerLogicBehavior --> "1" NoteGameObject
+FretVisualFeedbackSpawnerLogicBehavior --> "1" Fret
+Mode --> "*" Note
+NotesManagerLogicBehavior --> "1" NoteGameObject
+NotesManagerLogicBehavior --> "1" Fret
+NotesManagerLogicBehavior --> "*" FretLogicBehavior
+NotesManagerLogicBehavior --> "*" NoteGameObject
+NotesManagerLogicBehavior --> "1" Mode
+ScoreLogicBehavior --> "1" NoteGameObject
+ScoreLogicBehavior --> "1" Fret
+SongPlayerLogicBehavior --> "1" Song
+@enduml

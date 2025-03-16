@@ -1,0 +1,23 @@
+@startuml
+class BooleanScaleOutputBehavior extends OutputBehavior {
+    +setup(attachedOn: GameObject): void
+    +tick(_deltaTime: number): void
+}
+class ForwardOutputBehavior extends OutputBehavior {
+    #speed: number
+    #time: number
+    #offset: number
+    +tick(_deltaTime: number): void
+}
+class RepeatableForwardOutputBehavior extends ForwardOutputBehavior {
+    +tick(_deltaTime: number): void
+}
+class ScalingOutputBehavior extends OutputBehavior {
+    +transitionToScale(target: Vector3): void
+    +tick(_deltaTime: number): void
+}
+class VisualFeedbackOutputBehavior extends TextRenderBehavior {
+    +onAnimationEnd: Event<void>
+    +tick(_deltaTime: number): void
+}
+@enduml

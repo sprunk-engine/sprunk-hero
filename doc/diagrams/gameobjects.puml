@@ -1,0 +1,26 @@
+@startuml
+class ButtonGameObject extends GameObject {
+    +onClicked: Event<void>
+}
+class FretGameObject extends GameObject {
+    +fretLogicBehavior: FretLogicBehavior
+}
+class FretHandleGameObject extends GameObject {
+    +fretLogicBehaviors: FretLogicBehavior[]
+}
+class RoadGameObject extends GameObject
+class NoteGameObject extends GameObject {
+    +associatedNote: Note
+    +wasProcessed: boolean
+    +enableRendering(): void
+    +disableRendering(): void
+}
+class ScoreTextsGameObject extends GameObject {
+}
+class GameLogicGameObject extends GameObject
+class GizmoGameObject extends GameObject
+FretGameObject --> "1" FretLogicBehavior
+NoteGameObject --> "1" Note
+NotesManagerLogicBehavior --> "1" NoteGameObject
+ScoreLogicBehavior --> "1" NoteGameObject
+FretVisualFeedbackSpawnerLogicBehavior --> "1" NoteGameObject
