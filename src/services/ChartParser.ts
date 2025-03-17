@@ -3,7 +3,14 @@ import { Parser } from "../models/Parser.ts";
 import { parseChart } from "parsehero";
 import { Note } from "../models/Note.ts";
 import { Mode } from "../models/Mode.ts";
-import { ParsedNote } from "../models/ParsedNote.ts";
+import {
+  ParsedChart,
+  Timed,
+  NoteEvent,
+  PlayEvent,
+  ChartTrack,
+} from "../models/ParseHeroTypes.ts";
+
 /**
  * Parses Guitar Hero/Clone Hero .chart files into game format
  */
@@ -11,7 +18,7 @@ export class ChartParser implements Parser {
   // Constants for chart processing
   private static readonly DEFAULT_RESOLUTION = 192;
   private static readonly DEFAULT_BPM = 91.3;
-  private static readonly DEFAULT_OFFSET_ADJUSTMENT = 0.11;
+  private static readonly DEFAULT_OFFSET_ADJUSTMENT = 0.18;
   private static readonly DIFFICULTIES = ["Expert", "Hard", "Medium", "Easy"];
   private static readonly INSTRUMENTS = [
     "Single",
@@ -31,13 +38,13 @@ export class ChartParser implements Parser {
     offsetAdjustment: number = ChartParser.DEFAULT_OFFSET_ADJUSTMENT
   ): Promise<Chart> {
     const manifest = await this.loadManifest(manifestPath);
-    const chartContent = await this.loadChartFile(manifestPath, manifest);
+    const chartContent = await this.loadChartFile(manifest);
     const chartData = this.parseChartContent(chartContent);
 
     const songData = chartData.chart.Song;
     const resolution = songData?.resolution || ChartParser.DEFAULT_RESOLUTION;
-    const chartOffset = songData?.offset || 0;
-    const finalOffset = chartOffset + offsetAdjustment;
+    const chartOffset = songData?.offset;
+    const finalOffset = chartOffset ? chartOffset + offsetAdjustment : 0;
 
     const modes = this.extractDifficultyModes(
       chartData.chart,
@@ -59,7 +66,9 @@ export class ChartParser implements Parser {
   /**
    * Loads the song manifest file
    */
-  private async loadManifest(manifestPath: string): Promise<any> {
+  private async loadManifest(
+    manifestPath: string
+  ): Promise<Record<string, any>> {
     const manifestResponse = await fetch(manifestPath);
     if (!manifestResponse.ok) {
       throw new Error(`Manifest load failed: ${manifestResponse.status}`);
@@ -70,13 +79,8 @@ export class ChartParser implements Parser {
   /**
    * Loads the chart file using the manifest path as base URL
    */
-  private async loadChartFile(
-    manifestPath: string,
-    manifest: any
-  ): Promise<string> {
-    const baseUrl = new URL(manifestPath, window.location.href);
-    const chartPath = new URL(manifest.modes[0].chartPath, baseUrl).href;
-    const chartResponse = await fetch(chartPath);
+  private async loadChartFile(manifest: Record<string, any>): Promise<string> {
+    const chartResponse = await fetch(manifest.modes[0].chartPath);
 
     if (!chartResponse.ok) {
       throw new Error(`Chart load failed: ${chartResponse.status}`);
@@ -93,11 +97,14 @@ export class ChartParser implements Parser {
   /**
    * Parses chart content using parsehero library
    */
-  private parseChartContent(chartContent: string): any {
+  private parseChartContent(chartContent: string): {
+    chart: ParsedChart;
+    warnings: string[];
+  } {
     try {
-      return parseChart(chartContent);
+      const result = parseChart(chartContent);
+      return result as { chart: ParsedChart; warnings: string[] };
     } catch (error) {
-      console.error("Failed to parse chart:", error);
       throw new Error(
         `Chart parsing failed: ${
           error instanceof Error ? error.message : String(error)
@@ -110,7 +117,7 @@ export class ChartParser implements Parser {
    * Extracts difficulty modes from parsed chart data
    */
   private extractDifficultyModes(
-    chartData: any,
+    chartData: ParsedChart,
     resolution: number,
     finalOffset: number
   ): Mode[] {
@@ -119,11 +126,11 @@ export class ChartParser implements Parser {
     // Try each difficulty+instrument combination
     for (const diff of ChartParser.DIFFICULTIES) {
       for (const inst of ChartParser.INSTRUMENTS) {
-        const trackName = `${diff}${inst}`;
-        const trackData = chartData[trackName];
+        const trackName = `${diff}${inst}` as ChartTrack;
+        const trackData = chartData[trackName] as Timed<PlayEvent>[];
 
         if (this.isValidTrackData(trackData)) {
-          const notes = this.convertNotes(trackData, resolution, finalOffset);
+          const notes = this.convertNotes(trackData!, resolution, finalOffset);
           modes.push({ difficulty: trackName, notes });
           break; // Found a valid track for this difficulty, move to next
         }
@@ -137,22 +144,22 @@ export class ChartParser implements Parser {
   /**
    * Validates if track data exists and is an array
    */
-  private isValidTrackData(trackData: any): boolean {
-    return trackData && Array.isArray(trackData);
+  private isValidTrackData(trackData: Timed<PlayEvent>[] | undefined): boolean {
+    return !!trackData && Array.isArray(trackData);
   }
 
   /**
    * Converts notes from parsehero format to game format
    */
   private convertNotes(
-    trackData: any[],
+    trackData: Timed<PlayEvent>[],
     resolution: number,
     finalOffset: number
   ): Note[] {
     return trackData
-      .filter((note: ParsedNote) => note.type === "note")
+      .filter((event): event is Timed<NoteEvent> => event.type === "note")
       .map(
-        (note: ParsedNote): Note => ({
+        (note): Note => ({
           time: note.assignedTime + finalOffset,
           fret: this.fretMapping(note.note),
           duration: this.calculateNoteDuration(note, resolution),
@@ -163,11 +170,14 @@ export class ChartParser implements Parser {
   /**
    * Calculates note duration in seconds
    */
-  private calculateNoteDuration(note: ParsedNote, resolution: number): number {
+  private calculateNoteDuration(
+    note: Timed<NoteEvent>,
+    resolution: number
+  ): number {
     if (note.duration <= 0) return 0;
 
-    const bpm = note.bpm || ChartParser.DEFAULT_BPM;
-    return (note.duration / resolution) * (60 / bpm);
+    // Since parsehero doesn't directly expose BPM on note events, we use our default
+    return (note.duration / resolution) * (60 / ChartParser.DEFAULT_BPM);
   }
 
   /**
@@ -180,7 +190,7 @@ export class ChartParser implements Parser {
   /**
    * Validates that modes were successfully extracted
    */
-  private validateModes(modes: Mode[], chartData: any): void {
+  private validateModes(modes: Mode[], chartData: ParsedChart): void {
     if (modes.length === 0) {
       console.error("No difficulty tracks found in chart!");
       console.error("Available sections:", Object.keys(chartData));
