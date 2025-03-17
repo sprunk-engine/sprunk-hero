@@ -1,4 +1,4 @@
-# Sprunk - A TypeScript Web Game Engine
+# Sprunk Hero - A sprunk engine example
 
 ## Description
 This is a [Vite](https://vitejs.dev/) project that aims to a classic instrument based rhythm game in 3d as an end-to-end example for [sprunk](https://github.com/CPNV-ES/game-engine)

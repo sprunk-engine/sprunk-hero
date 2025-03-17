@@ -1,0 +1,13 @@
+@startuml
+interface Parser {
+    +parseTrack(file: string): Promise<Chart>
+}
+class MidiParser implements Parser {
+    +parseTrack(file: string): Promise<Chart>
+}
+Mode --> "*" Note
+Chart --> "*" Mode
+Parser --> "1" Chart
+MidiParser --> "1" Chart
+MidiParser --> "*" Note
+@enduml

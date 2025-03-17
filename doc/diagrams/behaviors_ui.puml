@@ -1,0 +1,14 @@
+@startuml
+class ButtonLogicBehavior extends LogicBehavior {
+    +onButtonPressAndRelease: Event<void>
+    +changePointedDirection(origin: Vector3, dir: Vector3): void
+    +pointerDown(): void
+    +pointerUp(): void
+}
+class ButtonInputBehavior extends DeviceInputBehavior {
+    +onMouseMove(_data: { position: Vector2; delta: Vector2; }): void
+    +onMouseLeftClickDown(): void
+    +onMouseLeftClickUp(): void
+}
+ButtonInputBehavior --> "1" ButtonLogicBehavior
+@enduml

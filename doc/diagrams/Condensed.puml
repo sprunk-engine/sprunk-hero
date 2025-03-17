@@ -1,0 +1,107 @@
+@startuml
+package behaviors {
+    package notes {
+
+class FretLogicBehavior extends LogicBehavior {
+}
+class FretGamepadInputBehavior extends DeviceInputBehavior {
+}
+class FretInputBehavior extends DeviceInputBehavior {
+}
+class FretVisualFeedbackSpawnerLogicBehavior extends LogicBehavior {
+}
+class NotesManagerLogicBehavior extends LogicBehavior {
+}
+class ScoreLogicBehavior extends LogicBehavior {
+}
+class SongPlayerLogicBehavior extends LogicBehavior {
+}
+
+    }
+    package transform {
+
+class BooleanScaleOutputBehavior extends OutputBehavior {
+}
+class ForwardOutputBehavior extends OutputBehavior {
+}
+class RepeatableForwardOutputBehavior extends ForwardOutputBehavior {
+}
+class ScalingOutputBehavior extends OutputBehavior {
+}
+class VisualFeedbackOutputBehavior extends TextRenderBehavior {
+}
+
+    }
+    package ui {
+
+class ButtonLogicBehavior extends LogicBehavior {
+}
+class ButtonInputBehavior extends DeviceInputBehavior {
+}
+
+    }
+}
+package debug {
+
+class FreeLookCameraController extends LogicBehavior {
+}
+class FreeLookCameraKeyboardMouseInput extends DeviceInputBehavior {
+}
+class GridRenderBehavior extends LinesRenderBehavior
+
+}
+package gameobjects {
+
+class ButtonGameObject extends GameObject {
+}
+class FretGameObject extends GameObject {
+}
+class FretHandleGameObject extends GameObject {
+}
+class RoadGameObject extends GameObject
+class NoteGameObject extends GameObject {
+}
+class ScoreTextsGameObject extends GameObject {
+}
+class GameLogicGameObject extends GameObject
+class GizmoGameObject extends GameObject
+    package scenes {
+
+class HighwayScene extends GameObject {
+}
+
+    }
+}
+package models {
+
+interface Note {
+}
+interface Mode {
+}
+interface Song {
+}
+interface Chart {
+}
+class Fret {
+}
+interface Score {
+}
+
+}
+package services {
+
+interface Parser {
+}
+class MidiParser implements Parser {
+}
+
+}
+package shaders {
+}
+Mode --> "*" Note
+NotesManagerLogicBehavior --> "*" FretLogicBehavior
+NotesManagerLogicBehavior --> "*" NoteGameObject
+FretHandleGameObject --> "*" FretLogicBehavior
+Chart --> "*" Mode
+MidiParser --> "*" Note
+@enduml

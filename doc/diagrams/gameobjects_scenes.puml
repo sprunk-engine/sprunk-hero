@@ -1,0 +1,12 @@
+@startuml
+class HighwayScene extends GameObject {
+    +loadGame(): void
+}
+Mode --> "*" Note
+NotesManagerLogicBehavior --> "*" FretLogicBehavior
+NotesManagerLogicBehavior --> "*" NoteGameObject
+FretHandleGameObject --> "*" FretLogicBehavior
+Chart --> "*" Mode
+MidiParser --> "*" Note
+HighwayScene --> "1" ButtonGameObject
+@enduml
