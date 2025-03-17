@@ -6,11 +6,11 @@ import {
 import { RoadGameObject } from "./RoadGameObject.ts";
 import { NotesManagerLogicBehavior } from "../behaviors/notes/NotesManagerLogicBehavior.ts";
 import { FretHandleGameObject } from "./FretHandleGameObject.ts";
-import { ChartParser } from "../services/ChartParser.ts";
 import { SongPlayerLogicBehavior } from "../behaviors/notes/SongPlayerLogicBehavior.ts";
 import { ScoreLogicBehavior } from "../behaviors/notes/ScoreLogicBehavior.ts";
 import { FretVisualFeedbackSpawnerLogicBehavior } from "../behaviors/notes/FretVisualFeedbackSpawnerLogicBehavior.ts";
 import { ScoreTextsGameObject } from "./ScoreTextsGameObject.ts";
+import { ParserService } from "../services/ParserService.ts";
 
 /**
  * A GameObject that hold ann the movables components + game logic components of the scene (exluding camera, effects and background)
@@ -22,17 +22,26 @@ export class GameLogicGameObject extends GameObject {
   ) {
     super("GameLogic");
 
+    this.loadGame(renderEngine, inputEngine);
+  }
+
+  async loadGame(
+    renderEngine: RenderGameEngineComponent,
+    inputEngine: InputGameEngineComponent
+  ) {
     const fretsLane = new FretHandleGameObject(renderEngine, inputEngine);
     this.addChild(fretsLane);
 
     const road = new RoadGameObject(renderEngine);
     this.addChild(road);
 
-    const chart = new ChartParser().parseTrack(
-      "/assets/songs/song1/song-infos.json"
-    );
-    console.log(chart);
-    chart.then((chart) => {
+    const manifestPath = "/assets/songs/MichaelJackson-BeatIt/song-infos.json";
+
+    try {
+      const parser = await ParserService.createParser(manifestPath);
+
+      const chart = await parser.parseTrack(manifestPath);
+
       if (!chart.modes || chart.modes.length === 0) {
         console.error("No difficulty modes found in chart");
         return;
@@ -74,6 +83,8 @@ export class GameLogicGameObject extends GameObject {
         scoreBehavior
       );
       this.addChild(scoreGameObject);
-    });
+    } catch (error) {
+      console.error("Failed to load chart:", error);
+    }
   }
 }
