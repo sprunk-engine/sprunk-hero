@@ -1,4 +1,4 @@
-import {Camera, DeviceInputBehavior, InputGameEngineComponent, RenderEngineUtility, Vector2} from "sprunk-engine";
+import {Camera, DeviceInputBehavior, InputGameEngineComponent, Vector2} from "sprunk-engine";
 import {ButtonLogicBehavior} from "./ButtonLogicBehavior.ts";
 
 /**
