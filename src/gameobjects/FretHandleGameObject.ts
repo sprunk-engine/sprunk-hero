@@ -15,7 +15,7 @@ export class FretHandleGameObject extends GameObject{
         this.fretLogicBehaviors = Fret.all().map((fret) => {
             const fretGameObject = new FretGameObject(renderEngine, input, fret);
             this.addChild(fretGameObject);
-            return fretGameObject.fretLogicBehavior;
+            return fretGameObject.getFirstBehavior(FretLogicBehavior)!;
         });
     }
 }
