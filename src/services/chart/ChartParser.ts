@@ -1,165 +1,108 @@
-import { Parser } from "../Parser.ts";
 import { Chart } from "../../models/Chart.ts";
-import { Song } from "../../models/Song.ts";
-import { Mode } from "../../models/Mode.ts";
+import { Parser } from "../Parser.ts";
+import { parseChart } from "parsehero";
 import { Note } from "../../models/Note.ts";
-import { Section } from "../../models/Section.ts";
+import { Mode } from "../../models/Mode.ts";
 
-/**
- * ChartParser implements the parsing of .chart files into structured data.
- */
+// Add an interface for the parsed note format
+interface ParsedNote {
+  type: string;
+  note: number;
+  assignedTime: number;
+  duration: number;
+  bpm?: number;
+}
+
 export class ChartParser implements Parser {
-  /**
-   * Required sections that must be present in the chart file.
-   * [Song] is mandatory as it contains essential metadata like audio file path.
-   */
-  private readonly _requiredSections = ["[Song]"] as const;
+  public async parseTrack(manifestPath: string): Promise<Chart> {
+    // Load manifest
+    const manifestResponse = await fetch(manifestPath);
+    if (!manifestResponse.ok)
+      throw new Error(`Manifest load failed: ${manifestResponse.status}`);
+    const manifest = await manifestResponse.json();
 
-  public parse(chartFilePath: string): Chart {
-    const content = this.loadChartFile(chartFilePath);
-    this.validateChartFile(content);
+    // Load chart file
+    const baseUrl = new URL(manifestPath, window.location.href);
+    const chartPath = new URL(manifest.modes[0].chartPath, baseUrl).href;
+    const chartResponse = await fetch(chartPath);
+    if (!chartResponse.ok)
+      throw new Error(`Chart load failed: ${chartResponse.status}`);
 
-    const sections = this.parseSections(content);
-
-    return {
-      song: this.parseSong(sections),
-      modes: this.parseModes(sections),
-    };
-  }
-
-  /**
-   * Loads the chart file using XMLHttpRequest synchronously to ensure that the chart file is loaded before we can parse it.
-   *
-   * @param chartFilePath - Path to the chart file
-   * @returns The content of the chart file as a string
-   * @throws Error if file loading fails
-   */
-  private loadChartFile(chartFilePath: string): string {
-    const request = new XMLHttpRequest();
-    const path = chartFilePath.startsWith("/")
-      ? chartFilePath
-      : `/${chartFilePath}`;
-
-    request.open("GET", path, false);
-    request.send(null);
-
-    if (request.status !== 200) {
-      throw new Error(`Failed to load chart file: ${request.statusText}`);
+    const chartContent = await chartResponse.text();
+    if (!chartContent.startsWith("[Song]")) {
+      throw new Error("Invalid chart format - missing [Song] section");
     }
 
-    return request.responseText;
-  }
+    // Parse chart with parsehero - ⚠️ Fix: Access chart property
+    const parsedData = parseChart(chartContent);
+    console.log("Raw parsehero output:", parsedData);
 
-  private validateChartFile(content: string): boolean {
-    try {
-      this._requiredSections.every((section) => content.includes(section));
-      return true;
-    } catch (error) {
-      throw new Error("Invalid chart file");
-    }
-  }
+    // Important: The parsed data is in parsedData.chart, not directly in parsedData
+    const chartData = parsedData.chart;
 
-  private parseSections(content: string): Section[] {
-    const sections: Section[] = [];
-    let currentSection = "";
-    let currentContent: string[] = [];
+    // Get song data and resolution
+    const songData = chartData.Song;
+    const resolution = songData.resolution || 192;
 
-    content.split(/\r?\n/).forEach((line) => {
-      const trimmedLine = line.trim();
-      if (trimmedLine.startsWith("[") && trimmedLine.endsWith("]")) {
-        if (currentSection) {
-          sections.push({
-            key: currentSection,
-            content: currentContent,
+    // After getting songData
+    const offset = songData.offset || 0;
+
+    // Find all difficulty tracks (like ExpertSingle, HardSingle)
+    const modes: Mode[] = [];
+    const difficultyNames = ["Expert", "Hard", "Medium", "Easy"];
+    const instrumentNames = ["Single", "DoubleBass", "DoubleGuitar"];
+
+    // Try all combinations of difficulty+instrument names
+    for (const diff of difficultyNames) {
+      for (const inst of instrumentNames) {
+        const trackName = `${diff}${inst}`;
+        const trackData = chartData[trackName];
+
+        if (trackData && Array.isArray(trackData)) {
+          console.log(
+            `Found track: ${trackName} with ${trackData.length} notes`
+          );
+
+          // Convert to our Note format
+          const notes: Note[] = trackData
+            .filter((note: ParsedNote) => note.type === "note")
+            .map((note: ParsedNote) => ({
+              time: note.assignedTime + offset,
+              fret: this.fretMapping(note.note),
+              duration:
+                note.duration > 0
+                  ? (note.duration / resolution) * (60 / (note.bpm || 91.3))
+                  : 0,
+            }));
+
+          modes.push({
+            difficulty: trackName,
+            notes: notes,
           });
-          currentContent = [];
+
+          // Add one track for each found difficulty
+          break;
         }
-        currentSection = trimmedLine.slice(1, -1);
-      } else if (
-        currentSection &&
-        trimmedLine &&
-        trimmedLine !== "{" &&
-        trimmedLine !== "}"
-      ) {
-        currentContent.push(trimmedLine);
       }
-    });
-
-    if (currentSection) {
-      sections.push({
-        key: currentSection,
-        content: currentContent,
-      });
     }
 
-    return sections;
-  }
-
-  /**
-   * Parses the Song section into a Song object.
-   * It create a temporary object with the song data and then convert it to a Song object.
-   * It provides default values for optional fields since the chart file is not always complete or has the same attributes.
-   *
-   * @param sections - Array of all parsed sections
-   * @returns Parsed Song object with metadata
-   * @throws Error if Song section is not found
-   */
-  private parseSong(sections: Section[]): Song {
-    const songSection = sections.find((section) => section.key === "Song");
-    if (!songSection) {
-      throw new Error("Song section not found");
+    if (modes.length === 0) {
+      console.error("No difficulty tracks found in chart!");
+      console.log("Available sections:", Object.keys(chartData));
     }
-
-    const songData = Object.fromEntries(
-      songSection.content
-        .map((line) => {
-          const [key, ...valueParts] = line.split("=");
-          const value = valueParts.join("=").trim();
-          return [
-            key.trim(),
-            value.startsWith('"') && value.endsWith('"')
-              ? value.slice(1, -1)
-              : value,
-          ];
-        })
-        .filter(([key, value]) => key && value)
-    );
 
     return {
-      name: songData["Name"] || "",
-      artist: songData["Artist"] || "",
-      offset: parseFloat(songData["Offset"] || "0"),
-      resolution: parseInt(songData["Resolution"] || "192", 10),
-      musicStream: songData["MusicStream"] || songData["GuitarStream"] || "",
+      song: {
+        name: manifest.song.name,
+        artist: manifest.song.artist,
+        offset: offset,
+        songPartsPath: manifest.song.songPartsPath,
+      },
+      modes: modes,
     };
   }
 
-  private parseModes(sections: Section[]): Mode[] {
-    return sections
-      .filter((section) => section.key.includes("Single"))
-      .map((section) => ({
-        difficulty: `${section.key.split("Single")[0]} Guitar`,
-        notes: this.parseNotes(section.content),
-      }));
-  }
-
-  private parseNotes(data: string[]): Note[] {
-    return data
-      .map((line) => {
-        if (!line.includes("N")) return null;
-
-        const [time, noteData] = line.split("=");
-        if (!noteData) return null;
-
-        const [type, fret, duration] = noteData.trim().split(" ");
-        if (type !== "N") return null;
-
-        return {
-          time: parseInt(time.trim()) / 1000,
-          fret: parseInt(fret),
-          duration: parseInt(duration) / 1000,
-        };
-      })
-      .filter((note): note is Note => note !== null);
+  private fretMapping(chartNote: number): number {
+    return chartNote < 5 ? chartNote : 0;
   }
 }
