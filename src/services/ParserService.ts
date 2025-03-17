@@ -1,4 +1,4 @@
-import { Parser } from "./Parser.ts";
+import { Parser } from "../models/Parser.ts";
 import { MidiParser } from "./MidiParser.ts";
 import { ChartParser } from "./ChartParser.ts";
 import { Manifest } from "../models/Manifest.ts";

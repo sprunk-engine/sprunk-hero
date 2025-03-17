@@ -1,5 +1,5 @@
 import { Chart } from "../models/Chart.ts";
-import { Parser } from "./Parser.ts";
+import { Parser } from "../models/Parser.ts";
 import { parseChart } from "parsehero";
 import { Note } from "../models/Note.ts";
 import { Mode } from "../models/Mode.ts";
