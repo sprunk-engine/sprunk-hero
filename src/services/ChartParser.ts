@@ -1,9 +1,9 @@
-import { Chart } from "../../models/Chart.ts";
-import { Parser } from "../Parser.ts";
+import { Chart } from "../models/Chart.ts";
+import { Parser } from "./Parser.ts";
 import { parseChart } from "parsehero";
-import { Note } from "../../models/Note.ts";
-import { Mode } from "../../models/Mode.ts";
-import { ParsedNote } from "../../models/ParsedNote.ts";
+import { Note } from "../models/Note.ts";
+import { Mode } from "../models/Mode.ts";
+import { ParsedNote } from "../models/ParsedNote.ts";
 /**
  * Parses Guitar Hero/Clone Hero .chart files into game format
  */
