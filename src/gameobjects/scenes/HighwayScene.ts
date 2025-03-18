@@ -1,9 +1,6 @@
 import {
   Camera,
-  GameEngineWindow,
   GameObject,
-  InputGameEngineComponent,
-  RenderGameEngineComponent,
   Vector2,
   Vector3,
 } from "sprunk-engine";
@@ -18,67 +15,57 @@ import { ButtonGameObject } from "../ButtonGameObject.ts";
  * A scene that represents the highway scene.
  */
 export class HighwayScene extends GameObject {
-  private _renderComponent: RenderGameEngineComponent;
-  private _inputComponent: InputGameEngineComponent;
-  private _playButton: ButtonGameObject;
+  private _debug: boolean;
+  private _playButton!: ButtonGameObject;
 
-  constructor(gameEngineWindow: GameEngineWindow, debug: boolean) {
+  constructor(debug: boolean) {
     super("HighwayScene");
+    this._debug = debug;
+  }
 
-    this._renderComponent = gameEngineWindow.getEngineComponent(
-      RenderGameEngineComponent
-    )!;
-    this._inputComponent = gameEngineWindow.getEngineComponent(
-      InputGameEngineComponent
-    )!;
+  protected onEnable() {
+    super.onEnable();
 
     const cameraGo = new GameObject("Camera");
+    this.addChild(cameraGo);
     const camera = new Camera(
-      this._renderComponent,
-      Math.PI / 3,
-      undefined,
-      undefined,
-      30
+        Math.PI / 3,
+        undefined,
+        undefined,
+        30
     );
     cameraGo.addBehavior(camera);
     cameraGo.transform.position.set(0, 2, 3);
     cameraGo.transform.rotation.rotateAroundAxis(
-      Vector3.right(),
-      -Math.PI / 10
+        Vector3.right(),
+        -Math.PI / 10
     );
-    this.addChild(cameraGo);
 
     this._playButton = new ButtonGameObject(
-      camera,
-      this._inputComponent,
-      this._renderComponent,
-      "/assets/play.png",
-      new Vector2(0.9, 0.4)
+        "/assets/play.png",
+        new Vector2(0.9, 0.4)
     );
+    cameraGo.addChild(this._playButton);
     this._playButton.transform.position.set(0, 0, -2);
     this._playButton.onClicked.addObserver(this.loadGame.bind(this));
-    cameraGo.addChild(this._playButton);
 
-    if (debug) {
-      const grid = new GridGameObject(this._renderComponent);
+    if (this._debug) {
+      const grid = new GridGameObject();
       this.addChild(grid);
 
-      const gizmo = new GizmoGameObject(this._renderComponent);
+      const gizmo = new GizmoGameObject();
       this.addChild(gizmo);
       gizmo.transform.position.set(5, 0, 0);
 
       cameraGo.addBehavior(new FreeLookCameraController());
       cameraGo.addBehavior(
-        new FreeLookCameraKeyboardMouseInput(this._inputComponent)
+          new FreeLookCameraKeyboardMouseInput()
       );
     }
   }
 
   public loadGame() {
-    const gameLogic = new GameLogicGameObject(
-      this._renderComponent,
-      this._inputComponent
-    );
+    const gameLogic = new GameLogicGameObject();
     this.addChild(gameLogic);
     this._playButton.destroy();
   }

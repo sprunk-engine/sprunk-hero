@@ -1,4 +1,4 @@
-import {Color, Event, RenderGameEngineComponent, TextRenderBehavior, Vector3} from "sprunk-engine";
+import {Color, Event, TextRenderBehavior, Vector3} from "sprunk-engine";
 
 /**
  * A text render behavior that displays visual feedback to the user.
@@ -16,9 +16,8 @@ export class VisualFeedbackOutputBehavior extends TextRenderBehavior{
 
     public onAnimationEnd : Event<void> = new Event<void>();
 
-    constructor(renderEngine: RenderGameEngineComponent, color: Color, text: string, from : Vector3, to : Vector3, totalTime : number) {
-        super(renderEngine, "assets/fonts/Sprunthrax/Sprunthrax-SemiBold-msdf.json", { centered: true, pixelScale: 1/64, color : [color.r, color.g, color.b, color.a] });
-        this._renderEngine = renderEngine;
+    constructor(color: Color, text: string, from : Vector3, to : Vector3, totalTime : number) {
+        super("assets/fonts/Sprunthrax/Sprunthrax-SemiBold-msdf.json", { centered: true, pixelScale: 1/64, color : [color.r, color.g, color.b, color.a] });
         this.text = text;
         this._from = from;
         this._to = to;

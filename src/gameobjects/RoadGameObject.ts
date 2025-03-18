@@ -1,4 +1,4 @@
-import {GameObject, MeshRenderBehavior, ObjLoader, RenderGameEngineComponent} from "sprunk-engine";
+import {GameObject, MeshRenderBehavior, ObjLoader} from "sprunk-engine";
 import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
 import {
@@ -12,12 +12,16 @@ export class RoadGameObject extends GameObject{
     /**
      * Create the road GameObject
      */
-    constructor(renderEngine: RenderGameEngineComponent) {
+    constructor() {
         super("Road");
+    }
+
+    protected onEnable() {
+        super.onEnable();
+
         ObjLoader.load("/assets/road/road-sprunk-hero.obj").then((obj) => {
             this.addBehavior(
                 new MeshRenderBehavior(
-                    renderEngine,
                     obj,
                     "/assets/road/GH3_PC-Axel-Unwrapped.png",
                     BasicVertexMVPWithUV,

@@ -1,9 +1,7 @@
 import {
   GameObject,
-  InputGameEngineComponent,
   MeshRenderBehavior,
   ObjLoader,
-  RenderGameEngineComponent,
 } from "sprunk-engine";
 import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
@@ -17,38 +15,40 @@ import { BooleanScaleOutputBehavior } from "../behaviors/transform/BooleanScaleO
  * A GameObject that represents a fret.
  */
 export class FretGameObject extends GameObject {
+    private _fret: Fret;
   constructor(
-    renderEngine: RenderGameEngineComponent,
-    input: InputGameEngineComponent,
     fret: Fret
   ) {
     super("Fret " + fret.toString());
-
-    this.transform.position.x = fret.position;
-
-    ObjLoader.load("/assets/note/fret.obj").then((obj) => {
-      this.addBehavior(
-        new MeshRenderBehavior(
-          renderEngine,
-          obj,
-          fret.texturePath,
-          BasicVertexMVPWithUV,
-          BasicTextureSample,
-          {
-            addressModeU: "repeat",
-            addressModeV: "repeat",
-            magFilter: "linear",
-            minFilter: "linear",
-          }
-        )
-      );
-    });
-
-    this.addBehavior(new FretLogicBehavior(fret));
-    this.addBehavior(new BooleanScaleOutputBehavior(0.35, 0.55, 0.03));
-    this.addBehavior(new FretInputBehavior(input));
-    this.addBehavior(
-      new FretGamepadInputBehavior(input)
-    );
+    this._fret = fret;
   }
+
+    protected onEnable() {
+        super.onEnable();
+        const fret = this._fret;
+
+        this.transform.position.x = fret.position;
+
+        ObjLoader.load("/assets/note/fret.obj").then((obj) => {
+            this.addBehavior(
+                new MeshRenderBehavior(
+                    obj,
+                    fret.texturePath,
+                    BasicVertexMVPWithUV,
+                    BasicTextureSample,
+                    {
+                        addressModeU: "repeat",
+                        addressModeV: "repeat",
+                        magFilter: "linear",
+                        minFilter: "linear",
+                    }
+                )
+            );
+        });
+
+        this.addBehavior(new FretLogicBehavior(fret));
+        this.addBehavior(new BooleanScaleOutputBehavior(0.35, 0.55, 0.03));
+        this.addBehavior(new FretInputBehavior());
+        this.addBehavior(new FretGamepadInputBehavior());
+    }
 }

@@ -1,4 +1,4 @@
-import {Color, LinesRenderBehavior, Renderer, Vector2} from "sprunk-engine";
+import {Color, LinesRenderBehavior, Vector2} from "sprunk-engine";
 
 /**
  * A behavior to render a grid with a dynamic color.
@@ -6,13 +6,11 @@ import {Color, LinesRenderBehavior, Renderer, Vector2} from "sprunk-engine";
 export class GridRenderBehavior extends LinesRenderBehavior {
   /**
    * Create a new LinesRenderBehavior with the given line data and color.
-   * @param renderEngine The render engine to use.
    * @param gridSize The size of the grid.
    * @param gridStep The step size of the grid.
    * @param color A color containing the RGBA color (4 floats: r, g, b, a).
    */
   constructor(
-    renderEngine: Renderer,
     gridSize: number,
     gridStep: number,
     color: Color,
@@ -37,6 +35,6 @@ export class GridRenderBehavior extends LinesRenderBehavior {
     vertices.push(new Vector2(gridSize, -gridSize));
     vertices.push(new Vector2(-gridSize, -gridSize));
 
-    super(renderEngine, vertices, color);
+    super(vertices, color);
   }
 }

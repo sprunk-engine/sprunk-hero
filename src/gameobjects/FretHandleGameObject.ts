@@ -1,4 +1,4 @@
-import {GameObject, InputGameEngineComponent, RenderGameEngineComponent} from "sprunk-engine";
+import {GameObject} from "sprunk-engine";
 import {FretGameObject} from "./FretGameObject.ts";
 import {Fret} from "../models/Fret.ts";
 import {FretLogicBehavior} from "../behaviors/notes/FretLogicBehavior.ts";
@@ -7,13 +7,17 @@ import {FretLogicBehavior} from "../behaviors/notes/FretLogicBehavior.ts";
  * A GameObject that represents all fret lanes (a ground of frets).
  */
 export class FretHandleGameObject extends GameObject{
-    public readonly fretLogicBehaviors: FretLogicBehavior[];
+    public fretLogicBehaviors!: FretLogicBehavior[];
 
-    constructor(renderEngine: RenderGameEngineComponent, input : InputGameEngineComponent) {
+    constructor() {
         super("FretLane");
+    }
+
+    protected onEnable() {
+        super.onEnable();
 
         this.fretLogicBehaviors = Fret.all().map((fret) => {
-            const fretGameObject = new FretGameObject(renderEngine, input, fret);
+            const fretGameObject = new FretGameObject(fret);
             this.addChild(fretGameObject);
             return fretGameObject.getFirstBehavior(FretLogicBehavior)!;
         });

@@ -1,7 +1,5 @@
 import {
   GameObject,
-  InputGameEngineComponent,
-  RenderGameEngineComponent,
 } from "sprunk-engine";
 import { RoadGameObject } from "./RoadGameObject.ts";
 import { NotesManagerLogicBehavior } from "../behaviors/notes/NotesManagerLogicBehavior.ts";
@@ -16,24 +14,20 @@ import { ParserService } from "../services/ParserService.ts";
  * A GameObject that hold ann the movables components + game logic components of the scene (exluding camera, effects and background)
  */
 export class GameLogicGameObject extends GameObject {
-  constructor(
-    renderEngine: RenderGameEngineComponent,
-    inputEngine: InputGameEngineComponent
-  ) {
+  constructor() {
     super("GameLogic");
-
-    this.loadGame(renderEngine, inputEngine);
   }
 
-  async loadGame(
-    renderEngine: RenderGameEngineComponent,
-    inputEngine: InputGameEngineComponent
-  ) {
-    const fretsLane = new FretHandleGameObject(renderEngine, inputEngine);
+  protected onEnable() {
+    super.onEnable();
+    this.loadGame();
+  }
+
+  async loadGame() {
+    const fretsLane = new FretHandleGameObject();
     this.addChild(fretsLane);
 
-    const road = new RoadGameObject(renderEngine);
-    this.addChild(road);
+    this.addChild(new RoadGameObject());
 
     const manifestPath = "/assets/songs/MichaelJackson-BeatIt/song-infos.json";
 
@@ -51,7 +45,6 @@ export class GameLogicGameObject extends GameObject {
       this.addBehavior(songPlayBack);
 
       const noteManagter = new NotesManagerLogicBehavior(
-        renderEngine,
         fretsLane.fretLogicBehaviors
       );
       this.addBehavior(noteManagter);
@@ -60,7 +53,7 @@ export class GameLogicGameObject extends GameObject {
       const visualFeedbackSpawner = new GameObject("VisualFeedbackSpawner");
       this.addChild(visualFeedbackSpawner);
       const visualFeedbackSpawnerBehavior =
-        new FretVisualFeedbackSpawnerLogicBehavior(renderEngine);
+        new FretVisualFeedbackSpawnerLogicBehavior();
       visualFeedbackSpawner.addBehavior(visualFeedbackSpawnerBehavior);
 
       const scoreBehavior = new ScoreLogicBehavior();
@@ -78,10 +71,7 @@ export class GameLogicGameObject extends GameObject {
         visualFeedbackSpawnerBehavior.showMissNote(note);
       });
 
-      const scoreGameObject = new ScoreTextsGameObject(
-        renderEngine,
-        scoreBehavior
-      );
+      const scoreGameObject = new ScoreTextsGameObject(scoreBehavior);
       this.addChild(scoreGameObject);
     } catch (error) {
       console.error("Failed to load chart:", error);

@@ -1,8 +1,6 @@
 import {
-    Camera, Event,
+    Event,
     GameObject,
-    InputGameEngineComponent,
-    Renderer,
     SpriteRenderBehavior, Vector2, Vector3
 } from "sprunk-engine";
 import {ButtonLogicBehavior} from "../behaviors/ui/ButtonLogicBehavior.ts";
@@ -15,21 +13,27 @@ export class ButtonGameObject extends GameObject{
      */
     public onClicked : Event<void> = new Event<void>();
 
+    private _perceivedSize: Vector2;
+    private _spriteImageUrl: RequestInfo | URL;
+
     /**
      * Creates a new ButtonGameObject.
-     * @param camera
-     * @param inputEngineComponent
-     * @param renderEngine
      * @param spriteImageUrl
      * @param perceivedSize - The perceived size of the button (hit box of image) between 0 and 1 (1 being the size of the corners of image).
      */
-    constructor(camera: Camera, inputEngineComponent: InputGameEngineComponent, renderEngine: Renderer, spriteImageUrl: RequestInfo | URL, perceivedSize : Vector2) {
+    constructor(spriteImageUrl: RequestInfo | URL, perceivedSize : Vector2) {
         super("Button");
+        this._spriteImageUrl = spriteImageUrl;
+        this._perceivedSize = perceivedSize;
+    }
 
-        this.addBehavior(new SpriteRenderBehavior(renderEngine, spriteImageUrl));
-        const logicBehavior = new ButtonLogicBehavior(perceivedSize);
+    protected onEnable() {
+        super.onEnable();
+
+        this.addBehavior(new SpriteRenderBehavior(this._spriteImageUrl));
+        const logicBehavior = new ButtonLogicBehavior(this._perceivedSize);
         this.addBehavior(logicBehavior);
-        this.addBehavior(new ButtonInputBehavior(camera, inputEngineComponent, logicBehavior));
+        this.addBehavior(new ButtonInputBehavior(logicBehavior));
         const scalingOutputBehavior = new ScalingOutputBehavior(0.1);
         logicBehavior.onDataChanged.addObserver((data) => {
             if(data.hovered){

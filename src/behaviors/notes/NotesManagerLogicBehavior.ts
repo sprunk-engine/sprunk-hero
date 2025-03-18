@@ -1,4 +1,4 @@
-import {ArrayUtility, GameObject, LogicBehavior, RenderGameEngineComponent, Event} from "sprunk-engine";
+import {ArrayUtility, GameObject, LogicBehavior, Event} from "sprunk-engine";
 import {Mode} from "../../models/Mode.ts";
 import {FretLogicBehavior} from "./FretLogicBehavior.ts";
 import {Fret} from "../../models/Fret.ts";
@@ -16,15 +16,13 @@ export class NotesManagerLogicBehavior extends LogicBehavior<void>{
 
     private _fretLogicBehaviors : FretLogicBehavior[] = [];
     private _container : GameObject | null = null;
-    private _renderEngine : RenderGameEngineComponent;
     private _speed : number = 10;
     private _time : number = 0;
     private _sortedNotes : NoteGameObject[] = [];
 
-    constructor(renderEngine : RenderGameEngineComponent, fretLogicBehaviors: FretLogicBehavior[]) {
+    constructor(fretLogicBehaviors: FretLogicBehavior[]) {
         super();
         this._fretLogicBehaviors = fretLogicBehaviors;
-        this._renderEngine = renderEngine;
     }
 
     protected onEnable() {
@@ -50,7 +48,7 @@ export class NotesManagerLogicBehavior extends LogicBehavior<void>{
         const maxSupportedIndex = Fret.all().length - 1;
         mode.notes.forEach((note) => {
             if(note.fret > maxSupportedIndex) return;
-            const noteGameObject = new NoteGameObject(this._renderEngine, note);
+            const noteGameObject = new NoteGameObject(note);
             noteGameObject.transform.position.z = -note.time * this._speed;
             this._container!.addChild(noteGameObject);
             this._sortedNotes.push(noteGameObject);
@@ -88,10 +86,10 @@ export class NotesManagerLogicBehavior extends LogicBehavior<void>{
     private detectNotePress(fretIndex: number, pressed: boolean) {
         if(!pressed) return;
         const notesAroundTime = this.getNotesAroundTime(this._time, NotesManagerLogicBehavior.MISSED_NOTE_RANGE);
-        const notesInFretAroundTime = notesAroundTime.filter((note) => note.associatedNote.fret === fretIndex);
-        const nearestNoteAbolute = notesInFretAroundTime.reduce((nearest, note) => {
+        const notesInFretAndNotProcessedAroundTime = notesAroundTime.filter((note) => note.associatedNote.fret === fretIndex && !note.wasProcessed);
+        const nearestNoteAbolute = notesInFretAndNotProcessedAroundTime.reduce((nearest, note) => {
             return Math.abs(nearest.associatedNote.time - this._time) < Math.abs(note.associatedNote.time - this._time) ? nearest : note;
-        }, notesInFretAroundTime[0]);
+        }, notesInFretAndNotProcessedAroundTime[0]);
         if(!nearestNoteAbolute){
             this.hitNothing(Fret.fromIndex(fretIndex));
             return;
@@ -103,7 +101,7 @@ export class NotesManagerLogicBehavior extends LogicBehavior<void>{
     }
 
     private bustNote(note: NoteGameObject, pressPrecision: number) {
-        this._container!.removeChild(note);
+        note.disableRendering();
         note.wasProcessed = true;
         this.onHitNote.emit({note, precision: pressPrecision});
     }
