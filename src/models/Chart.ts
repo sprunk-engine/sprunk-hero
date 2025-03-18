@@ -1,7 +1,7 @@
-import {Mode} from "./Mode.ts";
-import {Song} from "./Song.ts";
+import { Mode } from "./Mode.ts";
+import { Song } from "./Song.ts";
 
 export interface Chart {
-    song: Song;
-    modes: Mode[];
+  song: Song;
+  modes: Mode[];
 }
