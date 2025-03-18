@@ -1,2 +1,2 @@
 /// <reference types="vite/client" />
-declare module "parsehero";
+//declare module "parsehero";
