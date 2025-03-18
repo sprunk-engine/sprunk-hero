@@ -43,10 +43,10 @@ export class ChartParser implements Parser {
     const songData = chartData.chart.Song;
     const resolution = songData.resolution;
     const chartOffset = songData?.offset;
-    const finalOffset = (chartOffset || 0) + offsetAdjustment;
+    const finalOffset = chartOffset ? chartOffset + offsetAdjustment : 0;
 
     const syncTrack = chartData.chart.SyncTrack;
-    const bpms = syncTrack?.bpms || [];
+    const bpms = syncTrack?.bpms;
 
     const modes = this.extractDifficultyModes(
       chartData.chart,
@@ -133,7 +133,6 @@ export class ChartParser implements Parser {
       }
     }
 
-    this.validateModes(modes, chartData);
     return modes;
   }
 
@@ -152,7 +151,7 @@ export class ChartParser implements Parser {
       .map(
         (note): Note => ({
           time: note.assignedTime + finalOffset,
-          fret: this.fretMapping(note.note),
+          fret: note.note,
           duration: this.calculateNoteDuration(note, resolution, bpms),
         })
       );
@@ -169,18 +168,5 @@ export class ChartParser implements Parser {
     const startTime = note.assignedTime;
     const endTime = tickToTime(endTick, resolution, bpms);
     return endTime - startTime;
-  }
-
-  private fretMapping(chartNote: number): number {
-    return chartNote < 5 ? chartNote : 0;
-  }
-
-  private validateModes(modes: Mode[], chartData: ParsedChart): void {
-    if (modes.length === 0) {
-      console.error("No difficulty tracks found in chart!");
-      console.error("Available sections:", Object.keys(chartData));
-    } else {
-      console.info(`Found ${modes.length} difficulty modes`);
-    }
   }
 }
