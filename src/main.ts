@@ -14,5 +14,5 @@ const gameEngineWindow: GameEngineWindow = Sprunk.newGame(canvas, debug, [
     "RenderGameEngineComponent",
 ]);
 
-const scene = new HighwayScene(gameEngineWindow, debug);
+const scene = new HighwayScene(debug);
 gameEngineWindow.root.addChild(scene);
