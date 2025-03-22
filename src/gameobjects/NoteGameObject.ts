@@ -1,4 +1,4 @@
-import {GameObject, MeshRenderBehavior, ObjLoader, RenderGameEngineComponent} from "sprunk-engine";
+import {GameObject, MeshRenderBehavior, ObjLoader} from "sprunk-engine";
 import BasicVertexMVPWithUV from "../shaders/BasicVertexMVPWithUVAndNormals.vert.wgsl?raw";
 import BasicTextureSample from "../shaders/BasicTextureSample-OpenGL-Like.frag.wgsl?raw";
 import {Note} from "../models/Note.ts";
@@ -13,18 +13,22 @@ export class NoteGameObject extends GameObject{
 
     private _meshRenderBehavior : MeshRenderBehavior | undefined;
     private _needRendering : boolean = false;
+    private _isRendered : boolean = false;
 
-    constructor(renderEngine: RenderGameEngineComponent, note : Note) {
+    constructor(note : Note) {
         super("Note");
-        const fret = Fret.fromIndex(note.fret);
         this.associatedNote = note;
+    }
+
+    protected onEnable() {
+        super.onEnable();
+        const fret = Fret.fromIndex(this.associatedNote.fret);
 
         this.transform.scale.set(0.45, 0.45, 0.45);
         this.transform.position.x = fret.position;
 
         ObjLoader.load("/assets/note/note.obj").then((obj) => {
             this._meshRenderBehavior = new MeshRenderBehavior(
-                renderEngine,
                 obj,
                 fret.texturePath,
                 BasicVertexMVPWithUV,
@@ -43,18 +47,21 @@ export class NoteGameObject extends GameObject{
     }
 
     public enableRendering() {
-        if(this._needRendering) return;
+        if(this._isRendered) return;
         this._needRendering = true;
         if(this._meshRenderBehavior){
             this.addBehavior(this._meshRenderBehavior);
+            this._isRendered = true;
         }
     }
 
     public disableRendering() {
-        if(!this._needRendering) return;
+        if(!this._isRendered) return;
         this._needRendering = false;
         if(this._meshRenderBehavior) {
+            console.log(this._meshRenderBehavior + " " + this._isRendered + " " + this._needRendering + " " + this.name);
             this.removeBehavior(this._meshRenderBehavior);
+            this._isRendered = false;
         }
     }
 }

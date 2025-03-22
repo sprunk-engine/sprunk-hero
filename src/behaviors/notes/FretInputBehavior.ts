@@ -1,15 +1,15 @@
-import {DeviceInputBehavior, Inject, InputGameEngineComponent} from "sprunk-engine";
+import {DeviceInputBehavior, Inject} from "sprunk-engine";
 import {FretLogicBehavior} from "./FretLogicBehavior.ts";
 
 /**
  * A logic behavior that controls a fret input with keyboard input.
  */
 export class FretInputBehavior extends DeviceInputBehavior{
-    @Inject(FretLogicBehavior,false)
+    @Inject(FretLogicBehavior)
     private _logic!: FretLogicBehavior;
 
-    constructor(inputEngineComponent: InputGameEngineComponent) {
-        super(inputEngineComponent);
+    constructor() {
+        super();
     }
 
     onKeyboardKeyDown(_key: string) {

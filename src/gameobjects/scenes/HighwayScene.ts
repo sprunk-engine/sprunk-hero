@@ -1,9 +1,6 @@
 import {
   Camera,
-  GameEngineWindow,
   GameObject,
-  InputGameEngineComponent,
-  RenderGameEngineComponent,
   Vector2,
   Vector3,
 } from "sprunk-engine";
@@ -19,43 +16,38 @@ import { SongSelectionGameObject } from "../SongSelectionGameObject.ts";
  * A scene that represents the highway scene.
  */
 export class HighwayScene extends GameObject {
-  private _renderComponent: RenderGameEngineComponent;
-  private _inputComponent: InputGameEngineComponent;
-  private _playButton: ButtonGameObject;
+  private _debug: boolean;
+  private _playButton!: ButtonGameObject;
   private _songSelection: SongSelectionGameObject;
   private _selectedSongId: string = "";
   private _cameraGo: GameObject;
   private _camera: Camera;
 
-  constructor(gameEngineWindow: GameEngineWindow, debug: boolean) {
+  constructor(debug: boolean) {
     super("HighwayScene");
+    this._debug = debug;
+  }
 
-    this._renderComponent = gameEngineWindow.getEngineComponent(
-      RenderGameEngineComponent
-    )!;
-    this._inputComponent = gameEngineWindow.getEngineComponent(
-      InputGameEngineComponent
-    )!;
+  protected onEnable() {
+    super.onEnable();
 
     // Create a static camera for menu
     this._cameraGo = new GameObject("Camera");
+    this.addChild(this._cameraGo);
     this._camera = new Camera(
-      this._renderComponent,
-      Math.PI / 3,
-      undefined,
-      undefined,
-      30
+        Math.PI / 3,
+        undefined,
+        undefined,
+        30
     );
+    this._cameraGo.addBehavior(this._camera);
     this._cameraGo.addBehavior(this._camera);
     this._cameraGo.transform.position.set(0, 0, 10); // Camera 10 units back
     this.addChild(this._cameraGo);
 
     // Create song selection UI
-    this._songSelection = new SongSelectionGameObject(
-      this._camera,
-      this._inputComponent,
-      this._renderComponent
-    );
+    this._songSelection = new SongSelectionGameObject();
+
 
     // Position song selection in front of camera
     this._songSelection.transform.position.set(0, 0, 0);
@@ -66,28 +58,26 @@ export class HighwayScene extends GameObject {
 
     // Create play button (initially hidden)
     this._playButton = new ButtonGameObject(
-      this._camera,
-      this._inputComponent,
-      this._renderComponent,
-      "/assets/play.png",
-      new Vector2(0.9, 0.4)
+        "/assets/play.png",
+        new Vector2(0.9, 0.4)
     );
+    this._playButton.transform.position.set(0, 0, -2);
     this._playButton.transform.position.set(0, 0, -2); // Original position
     this._playButton.transform.scale.set(0, 0, 0); // Hide initially
     this._cameraGo.addChild(this._playButton); // Attach to camera as original
     this._playButton.onClicked.addObserver(this.loadGame.bind(this));
 
-    if (debug) {
-      const grid = new GridGameObject(this._renderComponent);
+    if (this._debug) {
+      const grid = new GridGameObject();
       this.addChild(grid);
 
-      const gizmo = new GizmoGameObject(this._renderComponent);
+      const gizmo = new GizmoGameObject();
       this.addChild(gizmo);
       gizmo.transform.position.set(5, 0, 0);
 
       this._cameraGo.addBehavior(new FreeLookCameraController());
       this._cameraGo.addBehavior(
-        new FreeLookCameraKeyboardMouseInput(this._inputComponent)
+        new FreeLookCameraKeyboardMouseInput()
       );
     }
   }
@@ -124,8 +114,6 @@ export class HighwayScene extends GameObject {
 
     // Create game logic with selected song ID
     const gameLogic = new GameLogicGameObject(
-      this._renderComponent,
-      this._inputComponent,
       this._selectedSongId
     );
     this.addChild(gameLogic);
