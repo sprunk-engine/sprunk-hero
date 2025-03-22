@@ -2,12 +2,26 @@
 interface Parser {
     +parseTrack(file: string): Promise<Chart>
 }
+class ChartParser implements Parser {
+    +parseTrack(manifestPath: string, offsetAdjustment?: number): Promise<Chart>
+}
+interface Manifest {
+    +song: { name: string; artist: string; offset: number; songPartsPath: string[]; }
+    +modes: { difficulty: string; chartPath?: string | undefined; midiPath?: string | undefined; }[]
+}
 class MidiParser implements Parser {
     +parseTrack(file: string): Promise<Chart>
+}
+class ParserService {
 }
 Mode --> "*" Note
 Chart --> "*" Mode
 Parser --> "1" Chart
+ChartParser --> "1" Chart
+ChartParser --> "*" Mode
+ChartParser --> "*" Note
 MidiParser --> "1" Chart
 MidiParser --> "*" Note
+ParserService --> "1" Parser
+ParserService --> "1" Manifest
 @enduml
