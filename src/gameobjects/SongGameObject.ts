@@ -14,6 +14,8 @@ export class SongGameObject extends GameObject {
    */
   public onSelected: Event<string> = new Event<string>();
 
+  private _songId: string;
+
   /**
    * Creates a new SongGameObject.
    */
@@ -21,19 +23,24 @@ export class SongGameObject extends GameObject {
     songId: string
   ) {
     super(`Song_${songId}`);
+    this._songId = songId;
+  }
+
+  protected onEnable() {
+    super.onEnable();
 
     // Create album cover button
     const albumButton = new ButtonGameObject(
-      `/assets/songs/${songId}/album.png`,
-      new Vector2(1, 1),
-      2,
-      2.5,
-      1
+        `/assets/songs/${this._songId}/album.png`,
+        new Vector2(1, 1),
+        2,
+        2.5,
+        1
     );
 
     // Set click handler to emit selection event
     albumButton.onClicked.addObserver(() => {
-      this.onSelected.emit(songId);
+      this.onSelected.emit(this._songId);
     });
 
     this.addChild(albumButton);
