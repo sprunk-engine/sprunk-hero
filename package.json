@@ -7,11 +7,13 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "generate-uml": "node ./doc/generator.js"
+    "generate-uml": "node ./doc/generator.js",
+    "generate-doc": "npx typedoc --out ./doc/site/build ./src/lib.ts"
   },
   "devDependencies": {
     "typescript": "~5.7.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "typedoc": "^0.28.1"
   },
   "dependencies": {
     "@tonejs/midi": "^2.0.28",
