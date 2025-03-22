@@ -1,6 +1,7 @@
 @startuml
 class HighwayScene extends GameObject {
-    +loadGame(): void
+    #onEnable(): void
+    +loadGame(songId: string): void
 }
 Mode --> "*" Note
 NotesManagerLogicBehavior --> "*" FretLogicBehavior
@@ -10,6 +11,5 @@ Chart --> "*" Mode
 MidiParser --> "*" Note
 ChartParser --> "*" Mode
 ChartParser --> "*" Note
-HighwayScene --> "1" ButtonGameObject
 HighwayScene --> "1" SongSelectionGameObject
 @enduml

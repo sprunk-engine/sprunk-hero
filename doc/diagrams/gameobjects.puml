@@ -1,28 +1,45 @@
 @startuml
 class ButtonGameObject extends GameObject {
     +onClicked: Event<void>
+    #onEnable(): void
 }
-class FretGameObject extends GameObject
+class FretGameObject extends GameObject {
+    #onEnable(): void
+}
 class FretHandleGameObject extends GameObject {
     +fretLogicBehaviors: FretLogicBehavior[]
+    #onEnable(): void
 }
-class RoadGameObject extends GameObject
+class RoadGameObject extends GameObject {
+    #onEnable(): void
+}
 class NoteGameObject extends GameObject {
     +associatedNote: Note
     +wasProcessed: boolean
+    #onEnable(): void
     +enableRendering(): void
     +disableRendering(): void
 }
 class ScoreTextsGameObject extends GameObject {
+    #onEnable(): void
+    #onDisable(): void
 }
 class GameLogicGameObject extends GameObject {
-    +loadGame(renderEngine: RenderGameEngineComponent, inputEngine: InputGameEngineComponent, selectedSongId: string): Promise<void>
+    #onEnable(): void
+    +loadGame(selectedSong: string): Promise<void>
 }
-class GizmoGameObject extends GameObject
+class GizmoGameObject extends GameObject {
+    #onEnable(): void
+}
+class SongGameObject extends GameObject {
+    +onSelected: Event<string>
+    #onEnable(): void
+}
 class SongSelectionGameObject extends GameObject {
     +onSongSelected: Event<string>
-    +cleanup(): void
+    #onEnable(): void
 }
+FretGameObject --> "1" Fret
 FretHandleGameObject --> "*" FretLogicBehavior
 Mode --> "*" Note
 NoteGameObject --> "1" Note
@@ -31,6 +48,7 @@ NotesManagerLogicBehavior --> "*" FretLogicBehavior
 NotesManagerLogicBehavior --> "*" NoteGameObject
 ScoreLogicBehavior --> "1" NoteGameObject
 FretVisualFeedbackSpawnerLogicBehavior --> "1" NoteGameObject
+ScoreTextsGameObject --> "1" ScoreLogicBehavior
 Chart --> "*" Mode
 MidiParser --> "*" Note
 ChartParser --> "*" Mode

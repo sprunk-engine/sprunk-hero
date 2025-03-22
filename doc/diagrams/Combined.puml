@@ -1,6 +1,4 @@
 @startuml
-package api {
-}
 package behaviors {
     package notes {
 
@@ -107,33 +105,50 @@ package gameobjects {
 
 class ButtonGameObject extends GameObject {
     +onClicked: Event<void>
+    #onEnable(): void
 }
-class FretGameObject extends GameObject
+class FretGameObject extends GameObject {
+    #onEnable(): void
+}
 class FretHandleGameObject extends GameObject {
     +fretLogicBehaviors: FretLogicBehavior[]
+    #onEnable(): void
 }
-class RoadGameObject extends GameObject
+class RoadGameObject extends GameObject {
+    #onEnable(): void
+}
 class NoteGameObject extends GameObject {
     +associatedNote: Note
     +wasProcessed: boolean
+    #onEnable(): void
     +enableRendering(): void
     +disableRendering(): void
 }
 class ScoreTextsGameObject extends GameObject {
+    #onEnable(): void
+    #onDisable(): void
 }
 class GameLogicGameObject extends GameObject {
-    +loadGame(renderEngine: RenderGameEngineComponent, inputEngine: InputGameEngineComponent, selectedSongId: string): Promise<void>
+    #onEnable(): void
+    +loadGame(selectedSong: string): Promise<void>
 }
-class GizmoGameObject extends GameObject
+class GizmoGameObject extends GameObject {
+    #onEnable(): void
+}
+class SongGameObject extends GameObject {
+    +onSelected: Event<string>
+    #onEnable(): void
+}
 class SongSelectionGameObject extends GameObject {
     +onSongSelected: Event<string>
-    +cleanup(): void
+    #onEnable(): void
 }
 
     package scenes {
 
 class HighwayScene extends GameObject {
-    +loadGame(): void
+    #onEnable(): void
+    +loadGame(songId: string): void
 }
 
     }
@@ -212,13 +227,14 @@ ScoreLogicBehavior --> "1" Fret
 SongPlayerLogicBehavior --> "1" Song
 ButtonInputBehavior --> "1" ButtonLogicBehavior
 FreeLookCameraKeyboardMouseInput --> "1" FreeLookCameraController
+FretGameObject --> "1" Fret
 FretHandleGameObject --> "*" FretLogicBehavior
 NoteGameObject --> "1" Note
+ScoreTextsGameObject --> "1" ScoreLogicBehavior
 Chart --> "*" Mode
 MidiParser --> "*" Note
 ChartParser --> "*" Mode
 ChartParser --> "*" Note
-HighwayScene --> "1" ButtonGameObject
 HighwayScene --> "1" SongSelectionGameObject
 Chart --> "1" Song
 Parser --> "1" Chart
