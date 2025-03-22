@@ -18,10 +18,10 @@ import { SongSelectionGameObject } from "../SongSelectionGameObject.ts";
 export class HighwayScene extends GameObject {
   private _debug: boolean;
   private _playButton!: ButtonGameObject;
-  private _songSelection: SongSelectionGameObject;
+  private _songSelection!: SongSelectionGameObject;
   private _selectedSongId: string = "";
-  private _cameraGo: GameObject;
-  private _camera: Camera;
+  private _cameraGo!: GameObject;
+  private _camera!: Camera;
 
   constructor(debug: boolean) {
     super("HighwayScene");
