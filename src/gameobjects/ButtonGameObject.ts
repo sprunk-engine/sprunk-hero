@@ -15,16 +15,25 @@ export class ButtonGameObject extends GameObject{
 
     private _perceivedSize: Vector2;
     private _spriteImageUrl: RequestInfo | URL;
+    private _normalScale: number;
+    private _hoverScale: number;
+    private _clickScale: number;
 
     /**
      * Creates a new ButtonGameObject.
      * @param spriteImageUrl
      * @param perceivedSize - The perceived size of the button (hit box of image) between 0 and 1 (1 being the size of the corners of image).
      */
-    constructor(spriteImageUrl: RequestInfo | URL, perceivedSize : Vector2) {
+    constructor(spriteImageUrl: RequestInfo | URL, perceivedSize : Vector2,
+                normalScale: number = 1,
+                hoverScale: number = 1.25,
+                clickScale: number = 0.5) {
         super("Button");
         this._spriteImageUrl = spriteImageUrl;
         this._perceivedSize = perceivedSize;
+        this._normalScale = normalScale;
+        this._hoverScale = hoverScale;
+        this._clickScale = clickScale;
     }
 
     protected onEnable() {
@@ -36,16 +45,26 @@ export class ButtonGameObject extends GameObject{
         this.addBehavior(new ButtonInputBehavior(logicBehavior));
         const scalingOutputBehavior = new ScalingOutputBehavior(0.1);
         logicBehavior.onDataChanged.addObserver((data) => {
-            if(data.hovered){
-                if(data.clicked){
-                    scalingOutputBehavior.transitionToScale(new Vector3(0.5, 0.5, 1));
+            if (data.hovered) {
+                if (data.clicked) {
+                  scalingOutputBehavior.transitionToScale(
+                    new Vector3(this._clickScale, this._clickScale, 1)
+                  );
                 } else {
-                    scalingOutputBehavior.transitionToScale(new Vector3(1.25, 1.25, 1));
+                  scalingOutputBehavior.transitionToScale(
+                    new Vector3(this._hoverScale, this._hoverScale, 1)
+                  );
                 }
-            }else{
-                scalingOutputBehavior.transitionToScale(new Vector3(1,1,1));
-            }
-        });
+              } else {
+                scalingOutputBehavior.transitionToScale(
+                  new Vector3(this._normalScale, this._normalScale, 1)
+                );
+              }
+            });
+
+            this.transform.scale.setFromVector3(
+              new Vector3(this._normalScale, this._normalScale, 1)
+            );
         logicBehavior.onButtonPressAndRelease.addObserver(() => {
             this.onClicked.emit();
         });

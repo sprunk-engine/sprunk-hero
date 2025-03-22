@@ -14,22 +14,25 @@ import { ParserService } from "../services/ParserService.ts";
  * A GameObject that hold ann the movables components + game logic components of the scene (exluding camera, effects and background)
  */
 export class GameLogicGameObject extends GameObject {
-  constructor() {
+  private _selectedSong: string;
+
+  constructor(selectedSongId: string) {
     super("GameLogic");
+    this._selectedSong = selectedSongId;
   }
 
   protected onEnable() {
     super.onEnable();
-    this.loadGame();
+    this.loadGame(this._selectedSong);
   }
 
-  async loadGame() {
+  async loadGame(selectedSong: string) {
     const fretsLane = new FretHandleGameObject();
     this.addChild(fretsLane);
 
     this.addChild(new RoadGameObject());
 
-    const manifestPath = "/assets/songs/MichaelJackson-BeatIt/song-infos.json";
+    const manifestPath = `/assets/songs/${selectedSong}/song-infos.json`;
 
     try {
       const parser = await ParserService.createParser(manifestPath);

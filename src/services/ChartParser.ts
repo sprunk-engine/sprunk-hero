@@ -1,5 +1,5 @@
 import { Chart } from "../models/Chart.ts";
-import { Parser } from "../models/Parser.ts";
+import { Parser } from "./Parser.ts";
 import {
   Bpm,
   ChartTrack,

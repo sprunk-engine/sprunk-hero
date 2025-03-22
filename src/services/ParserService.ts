@@ -1,7 +1,7 @@
-import { Parser } from "../models/Parser.ts";
+import { Parser } from "./Parser.ts";
 import { MidiParser } from "./MidiParser.ts";
 import { ChartParser } from "./ChartParser.ts";
-import { Manifest } from "../models/Manifest.ts";
+import { Manifest } from "./Manifest.ts";
 
 /**
  * Factory for creating the appropriate parser based on the chart type
