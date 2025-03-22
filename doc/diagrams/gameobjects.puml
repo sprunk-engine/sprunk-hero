@@ -1,0 +1,38 @@
+@startuml
+class ButtonGameObject extends GameObject {
+    +onClicked: Event<void>
+}
+class FretGameObject extends GameObject
+class FretHandleGameObject extends GameObject {
+    +fretLogicBehaviors: FretLogicBehavior[]
+}
+class RoadGameObject extends GameObject
+class NoteGameObject extends GameObject {
+    +associatedNote: Note
+    +wasProcessed: boolean
+    +enableRendering(): void
+    +disableRendering(): void
+}
+class ScoreTextsGameObject extends GameObject {
+}
+class GameLogicGameObject extends GameObject {
+    +loadGame(renderEngine: RenderGameEngineComponent, inputEngine: InputGameEngineComponent, selectedSongId: string): Promise<void>
+}
+class GizmoGameObject extends GameObject
+class SongSelectionGameObject extends GameObject {
+    +onSongSelected: Event<string>
+    +cleanup(): void
+}
+FretHandleGameObject --> "*" FretLogicBehavior
+Mode --> "*" Note
+NoteGameObject --> "1" Note
+NotesManagerLogicBehavior --> "1" NoteGameObject
+NotesManagerLogicBehavior --> "*" FretLogicBehavior
+NotesManagerLogicBehavior --> "*" NoteGameObject
+ScoreLogicBehavior --> "1" NoteGameObject
+FretVisualFeedbackSpawnerLogicBehavior --> "1" NoteGameObject
+Chart --> "*" Mode
+MidiParser --> "*" Note
+ChartParser --> "*" Mode
+ChartParser --> "*" Note
+@enduml

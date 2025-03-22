@@ -1,0 +1,229 @@
+@startuml
+package api {
+}
+package behaviors {
+    package notes {
+
+class FretLogicBehavior extends LogicBehavior {
+    +fret: Fret
+    +onPressed(): void
+    +onReleased(): void
+}
+class FretGamepadInputBehavior extends DeviceInputBehavior {
+    +onGamepadButtonDown(_buttonIndex: number): void
+    +onGamepadButtonUp(_buttonIndex: number): void
+    #onPressed(): void
+    #onReleased(): void
+}
+class FretInputBehavior extends DeviceInputBehavior {
+    +onKeyboardKeyDown(_key: string): void
+    +onKeyboardKeyUp(_key: string): void
+    #onPressed(): void
+    #onReleased(): void
+}
+class FretVisualFeedbackSpawnerLogicBehavior extends LogicBehavior {
+    +showHitNote(_note: NoteGameObject, precision: number): void
+    +showHitNothing(_fret: Fret): void
+    +showMissNote(_note: NoteGameObject): void
+}
+class NotesManagerLogicBehavior extends LogicBehavior {
+    +onHitNote: Event<{ note: NoteGameObject; precision: number; }>
+    +onHitNothing: Event<Fret>
+    +onMissNote: Event<NoteGameObject>
+    #onEnable(): void
+    +setChart(modeToPlay: Mode): void
+    +updateTime(songTime: number): void
+}
+class ScoreLogicBehavior extends LogicBehavior {
+    #onEnable(): void
+    +hitNote(_note: NoteGameObject, precision: number): void
+    +hitNothing(_fret: Fret): void
+    +missNote(_note: NoteGameObject): void
+}
+class SongPlayerLogicBehavior extends LogicBehavior {
+    #onEnable(): void
+    +tick(_deltaTime: number): void
+}
+
+    }
+    package transform {
+
+class BooleanScaleOutputBehavior extends OutputBehavior {
+    +setup(attachedOn: GameObject): void
+    +tick(_deltaTime: number): void
+}
+class ForwardOutputBehavior extends OutputBehavior {
+    #speed: number
+    #time: number
+    #offset: number
+    +tick(_deltaTime: number): void
+}
+class RepeatableForwardOutputBehavior extends ForwardOutputBehavior {
+    +tick(_deltaTime: number): void
+}
+class ScalingOutputBehavior extends OutputBehavior {
+    +transitionToScale(target: Vector3): void
+    +tick(_deltaTime: number): void
+}
+class VisualFeedbackOutputBehavior extends TextRenderBehavior {
+    +onAnimationEnd: Event<void>
+    +tick(_deltaTime: number): void
+}
+
+    }
+    package ui {
+
+class ButtonLogicBehavior extends LogicBehavior {
+    +onButtonPressAndRelease: Event<void>
+    +changePointedDirection(origin: Vector3, dir: Vector3): void
+    +pointerDown(): void
+    +pointerUp(): void
+}
+class ButtonInputBehavior extends DeviceInputBehavior {
+    +onMouseMove(_data: { position: Vector2; delta: Vector2; }): void
+    +onMouseLeftClickDown(): void
+    +onMouseLeftClickUp(): void
+}
+
+    }
+}
+package debug {
+
+class FreeLookCameraController extends LogicBehavior {
+    +move(direction: Vector3): void
+    +look(delta: Vector2): void
+}
+class FreeLookCameraKeyboardMouseInput extends DeviceInputBehavior {
+    #onEnable(): void
+    +onKeyboardKeyDown(key: string): void
+    +onKeyboardKeyUp(key: string): void
+    +tick(_deltaTime: number): void
+    +onMouseMove(__0: { delta: Vector2; }): void
+}
+class GridRenderBehavior extends LinesRenderBehavior
+
+}
+package gameobjects {
+
+class ButtonGameObject extends GameObject {
+    +onClicked: Event<void>
+}
+class FretGameObject extends GameObject
+class FretHandleGameObject extends GameObject {
+    +fretLogicBehaviors: FretLogicBehavior[]
+}
+class RoadGameObject extends GameObject
+class NoteGameObject extends GameObject {
+    +associatedNote: Note
+    +wasProcessed: boolean
+    +enableRendering(): void
+    +disableRendering(): void
+}
+class ScoreTextsGameObject extends GameObject {
+}
+class GameLogicGameObject extends GameObject {
+    +loadGame(renderEngine: RenderGameEngineComponent, inputEngine: InputGameEngineComponent, selectedSongId: string): Promise<void>
+}
+class GizmoGameObject extends GameObject
+class SongSelectionGameObject extends GameObject {
+    +onSongSelected: Event<string>
+    +cleanup(): void
+}
+
+    package scenes {
+
+class HighwayScene extends GameObject {
+    +loadGame(): void
+}
+
+    }
+}
+package models {
+
+interface Note {
+    +time: number
+    +fret: number
+    +duration: number
+}
+interface Mode {
+    +difficulty: string
+    +notes: Note[]
+}
+interface Song {
+    +name: string
+    +artist: string
+    +offset: number
+    +songPartsPath: string[]
+}
+interface Chart {
+    +song: Song
+    +modes: Mode[]
+}
+class Fret {
+    +index: number
+    +name: string
+    +toString(): string
+    +texturePath: string
+    +position: number
+    +keyboardKey: string
+    +gamepadKey: number
+}
+interface Score {
+    +score: number
+    +streak: number
+    +multiplier: number
+}
+
+}
+package services {
+
+interface Parser {
+    +parseTrack(file: string): Promise<Chart>
+}
+class ChartParser implements Parser {
+    +parseTrack(manifestPath: string, offsetAdjustment?: number): Promise<Chart>
+}
+interface Manifest {
+    +song: { name: string; artist: string; offset: number; songPartsPath: string[]; }
+    +modes: { difficulty: string; chartPath?: string | undefined; midiPath?: string | undefined; }[]
+}
+class MidiParser implements Parser {
+    +parseTrack(file: string): Promise<Chart>
+}
+class ParserService {
+}
+
+}
+package shaders {
+}
+FretLogicBehavior --> "1" Fret
+FretGamepadInputBehavior --> "1" FretLogicBehavior
+FretInputBehavior --> "1" FretLogicBehavior
+FretVisualFeedbackSpawnerLogicBehavior --> "1" NoteGameObject
+FretVisualFeedbackSpawnerLogicBehavior --> "1" Fret
+Mode --> "*" Note
+NotesManagerLogicBehavior --> "1" NoteGameObject
+NotesManagerLogicBehavior --> "1" Fret
+NotesManagerLogicBehavior --> "*" FretLogicBehavior
+NotesManagerLogicBehavior --> "*" NoteGameObject
+NotesManagerLogicBehavior --> "1" Mode
+ScoreLogicBehavior --> "1" NoteGameObject
+ScoreLogicBehavior --> "1" Fret
+SongPlayerLogicBehavior --> "1" Song
+ButtonInputBehavior --> "1" ButtonLogicBehavior
+FreeLookCameraKeyboardMouseInput --> "1" FreeLookCameraController
+FretHandleGameObject --> "*" FretLogicBehavior
+NoteGameObject --> "1" Note
+Chart --> "*" Mode
+MidiParser --> "*" Note
+ChartParser --> "*" Mode
+ChartParser --> "*" Note
+HighwayScene --> "1" ButtonGameObject
+HighwayScene --> "1" SongSelectionGameObject
+Chart --> "1" Song
+Parser --> "1" Chart
+ChartParser --> "1" Chart
+MidiParser --> "1" Chart
+ParserService --> "1" Parser
+ParserService --> "1" Manifest
+@enduml

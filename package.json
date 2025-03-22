@@ -1,15 +1,24 @@
 {
   "name": "sprunk-hero",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-uml": "node ./doc/generator.js",
+    "generate-doc": "npx typedoc --out ./doc/site/build ./src/lib.ts"
   },
   "devDependencies": {
     "typescript": "~5.7.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "typedoc": "^0.28.1"
+  },
+  "dependencies": {
+    "@tonejs/midi": "^2.0.28",
+    "parsehero": "^0.0.2",
+    "reflect-metadata": "^0.2.2",
+    "sprunk-engine": "^0.4.4"
   }
 }
