@@ -1,14 +1,14 @@
 {
   "name": "sprunk-hero",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "generate-uml": "node ./doc/generator.js",
-    "generate-doc": "npx typedoc --out ./doc/site/build ./src/main.ts"
+    "generate-doc": "npx typedoc --excludeInternal false --entryPointStrategy expand --out ./doc/site/build ./src/"
   },
   "devDependencies": {
     "typescript": "~5.7.2",
