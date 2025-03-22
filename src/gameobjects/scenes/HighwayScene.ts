@@ -1,7 +1,6 @@
 import {
   Camera,
   GameObject,
-  Vector2,
   Vector3,
 } from "sprunk-engine";
 import { FreeLookCameraController } from "../../debug/FreeLookCameraController.ts";
@@ -9,7 +8,6 @@ import { FreeLookCameraKeyboardMouseInput } from "../../debug/FreeLookCameraKeyb
 import { GridGameObject } from "../GridGameObject.ts";
 import { GizmoGameObject } from "../GizmoGameObject.ts";
 import { GameLogicGameObject } from "../GameLogicGameObject.ts";
-import { ButtonGameObject } from "../ButtonGameObject.ts";
 import { SongSelectionGameObject } from "../SongSelectionGameObject.ts";
 
 /**
@@ -17,9 +15,7 @@ import { SongSelectionGameObject } from "../SongSelectionGameObject.ts";
  */
 export class HighwayScene extends GameObject {
   private _debug: boolean;
-  private _playButton!: ButtonGameObject;
   private _songSelection!: SongSelectionGameObject;
-  private _selectedSongId: string = "";
   private _cameraGo!: GameObject;
   private _camera!: Camera;
 
@@ -56,17 +52,6 @@ export class HighwayScene extends GameObject {
       this.onSongSelected.bind(this)
     );
 
-    // Create play button (initially hidden)
-    this._playButton = new ButtonGameObject(
-        "/assets/play.png",
-        new Vector2(0.9, 0.4)
-    );
-    this._playButton.transform.position.set(0, 0, -2);
-    this._playButton.transform.position.set(0, 0, -2); // Original position
-    this._playButton.transform.scale.set(0, 0, 0); // Hide initially
-    this._cameraGo.addChild(this._playButton); // Attach to camera as original
-    this._playButton.onClicked.addObserver(this.loadGame.bind(this));
-
     if (this._debug) {
       const grid = new GridGameObject();
       this.addChild(grid);
@@ -87,25 +72,14 @@ export class HighwayScene extends GameObject {
    * @param songId The ID of the selected song.
    */
   private onSongSelected(songId: string) {
-    this._selectedSongId = songId;
-
-    // Hide song selection and show play button
-    this._songSelection.cleanup();
-
-    // Show play button with original animation
-    this._playButton.transform.scale.set(1, 1, 1); // Original scale
+    // Hide song selection
+    this._songSelection.destroy();
+    // Load the game with the selected song
+    this.loadGame(songId);
   }
 
-  public loadGame() {
-    if (!this._selectedSongId) {
-      console.error("No song selected");
-      return;
-    }
-
-    // Hide play button
-    this._playButton.destroy();
-
-    // Reset camera for gameplay
+  public loadGame(songId: string) {
+    // Set camera for gameplay
     this._cameraGo.transform.position.set(0, 2, 3);
     this._cameraGo.transform.rotation.rotateAroundAxis(
       Vector3.right(),
@@ -113,9 +87,7 @@ export class HighwayScene extends GameObject {
     );
 
     // Create game logic with selected song ID
-    const gameLogic = new GameLogicGameObject(
-      this._selectedSongId
-    );
+    const gameLogic = new GameLogicGameObject(songId);
     this.addChild(gameLogic);
   }
 }

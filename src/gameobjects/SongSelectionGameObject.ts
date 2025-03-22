@@ -64,11 +64,4 @@ export class SongSelectionGameObject extends GameObject {
       this.addChild(songObject);
     }
   }
-
-  /**
-   * Destroys all song objects.
-   */
-  public cleanup() {
-    this.destroy();
-  }
 }
