@@ -1,9 +1,6 @@
 import {
-  Camera,
   Event,
   GameObject,
-  InputGameEngineComponent,
-  RenderGameEngineComponent,
 } from "sprunk-engine";
 import { SongGameObject } from "./SongGameObject.ts";
 
@@ -16,29 +13,12 @@ export class SongSelectionGameObject extends GameObject {
    */
   public onSongSelected: Event<string> = new Event<string>();
 
-  /**
-   * Creates a new SongSelectionGameObject.
-   */
-  constructor(
-    camera: Camera,
-    inputComponent: InputGameEngineComponent,
-    renderComponent: RenderGameEngineComponent
-  ) {
-    super("SongSelection");
+  protected onEnable() {
+    super.onEnable();
 
-    this.initialize(camera, inputComponent, renderComponent);
-  }
-
-  /**
-   * Initializes the song selection by loading songs and creating buttons
-   */
-  private async initialize(
-    camera: Camera,
-    inputComponent: InputGameEngineComponent,
-    renderComponent: RenderGameEngineComponent
-  ) {
-    const songs = await this.loadSongs();
-    this.createSongButtons(songs, camera, inputComponent, renderComponent);
+    this.loadSongs().then((songs) => {
+      this.createSongButtons(songs);
+    });
   }
 
   /**
@@ -62,22 +42,14 @@ export class SongSelectionGameObject extends GameObject {
    * Creates and positions song buttons in a row
    */
   private createSongButtons(
-    songs: string[],
-    camera: Camera,
-    inputComponent: InputGameEngineComponent,
-    renderComponent: RenderGameEngineComponent
+    songs: string[]
   ) {
     // Create song objects in a row
     const spacing = 3;
     const startX = ((songs.length - 1) * spacing) / -2;
 
     for (let i = 0; i < songs.length; i++) {
-      const songObject = new SongGameObject(
-        camera,
-        inputComponent,
-        renderComponent,
-        songs[i]
-      );
+      const songObject = new SongGameObject(songs[i]);
 
       // Position each song horizontally with slightly different z positions
       // This ensures ray casting will only hit one album at a time
