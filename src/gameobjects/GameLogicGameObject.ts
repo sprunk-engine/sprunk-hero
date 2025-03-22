@@ -18,16 +18,18 @@ import { ParserService } from "../services/ParserService.ts";
 export class GameLogicGameObject extends GameObject {
   constructor(
     renderEngine: RenderGameEngineComponent,
-    inputEngine: InputGameEngineComponent
+    inputEngine: InputGameEngineComponent,
+    selectedSongId: string
   ) {
     super("GameLogic");
 
-    this.loadGame(renderEngine, inputEngine);
+    this.loadGame(renderEngine, inputEngine, selectedSongId);
   }
 
   async loadGame(
     renderEngine: RenderGameEngineComponent,
-    inputEngine: InputGameEngineComponent
+    inputEngine: InputGameEngineComponent,
+    selectedSongId: string
   ) {
     const fretsLane = new FretHandleGameObject(renderEngine, inputEngine);
     this.addChild(fretsLane);
@@ -35,7 +37,7 @@ export class GameLogicGameObject extends GameObject {
     const road = new RoadGameObject(renderEngine);
     this.addChild(road);
 
-    const manifestPath = "/assets/songs/MichaelJackson-BeatIt/song-infos.json";
+    const manifestPath = `/assets/songs/${selectedSongId}/song-infos.json`;
 
     try {
       const parser = await ParserService.createParser(manifestPath);
