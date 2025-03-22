@@ -36,7 +36,15 @@ You can then deploy these files to an any web server.
 ```shell
 ├───doc                     # Documentation
 ├───src                     # Source code
+│   ├───behaviors           # Behaviors-related code
+│   ├───gameobjects         # Custom Game objects (like prefabs, glue behavior and model)
+│   │   └───scenes          # Game scenes (root game objects, setting the environment)
+│   ├───models              # Models (structures, interfaces, enums)
+│   ├───services            # Services used across the application (processing)
+│   └───shaders             # Shader files (GLSL)
 ├───public                  # Web files / assets files
+│   └───assets              # Sprunk Engine Asset files (fonts, 3d models, textures)
+│       └───fonts           # Font files
 ```
 ### Class syntax
 The classes are written in order to follow the [Google TypeScript style guidelines](https://google.github.io/styleguide/tsguide.html#classes)
