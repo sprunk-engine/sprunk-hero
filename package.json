@@ -19,6 +19,6 @@
     "@tonejs/midi": "^2.0.28",
     "parsehero": "^0.0.2",
     "reflect-metadata": "^0.2.2",
-    "sprunk-engine": "^0.4.4"
+    "sprunk-engine": "^0.4.6"
   }
 }
